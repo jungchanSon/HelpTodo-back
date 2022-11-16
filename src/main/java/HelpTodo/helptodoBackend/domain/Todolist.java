@@ -19,12 +19,12 @@ public class Todolist {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @OneToMany(mappedBy = "todolist" , cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "todolist" , fetch = FetchType.LAZY)
     private List<Todo> todos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "todolist", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "todolist", fetch = FetchType.LAZY)
     private List<Doing> doing = new ArrayList<>();
 
-    @OneToMany(mappedBy = "todolist", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "todolist", fetch = FetchType.LAZY)
     private List<Done> done = new ArrayList<>();
 }

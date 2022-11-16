@@ -33,7 +33,21 @@ public class Member {
     @Embedded
     private LoginIdPw loginIdPw;
 
-
+//    memberTeam 매핑
     @OneToMany(mappedBy = "member", cascade= CascadeType.ALL)
     private List<MemberTeam> memberTeam = new ArrayList<>();
+
+//    todo, doing, done 매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Todo> todos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Doing> doings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Done> dones = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<TodoComment> todoComments = new ArrayList<>();
+
 }
