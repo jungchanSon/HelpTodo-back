@@ -1,5 +1,7 @@
 package HelpTodo.helptodoBackend.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,4 +18,13 @@ public class Todolist {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    @OneToMany(mappedBy = "todolist" , cascade= CascadeType.ALL)
+    private List<Todo> todos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "todolist", cascade= CascadeType.ALL)
+    private List<Doing> doing = new ArrayList<>();
+
+    @OneToMany(mappedBy = "todolist", cascade= CascadeType.ALL)
+    private List<Done> done = new ArrayList<>();
 }
