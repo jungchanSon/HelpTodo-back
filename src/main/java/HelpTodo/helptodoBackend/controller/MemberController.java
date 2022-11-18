@@ -1,20 +1,16 @@
 package HelpTodo.helptodoBackend.controller;
 
-import HelpTodo.helptodoBackend.Form.MemberForm;
+import HelpTodo.helptodoBackend.Form.Member.LoginForm;
+import HelpTodo.helptodoBackend.Form.Member.SignupForm;
 import HelpTodo.helptodoBackend.domain.LoginIdPw;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.service.MemberService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,25 +26,41 @@ public class MemberController {
 
     //회원 가입 컨트롤러
     @RequestMapping("/members/signup")
-    public String signup(@Valid MemberForm memberForm, BindingResult result){
-        Environment env = context.getEnvironment();
+    public String signup(@Valid SignupForm signupForm, BindingResult result){
+//        Environment env = context.getEnvironment();
         
         if (result.hasErrors()) {
-            return env.getProperty("localurl.front");
+            return "fail";
         }
 
         Member member = new Member();
 
-        member.setName(memberForm.getName());
+        member.setName(signupForm.getName());
 
-        LoginIdPw loginIdPw = new LoginIdPw(memberForm.getId(), memberForm.getPw());
-        member.setLoginIdPw(loginIdPw);
+        member.setLoginId(signupForm.getId());
+        member.setLoginId(signupForm.getPw());
 
-        System.out.println("loginIdPw.getId() = " + loginIdPw.getId());
-        System.out.println("loginIdPw.getPw() = " + loginIdPw.getPw());
-        System.out.println("member.getName() = " + member.getName());
+        log.info("loginIdPw.getId() = " + member.getLoginId());
+        log.info("loginIdPw.getPw() = " + member.getLoginPw());
+        log.info("member.getName() = " + member.getName());
         
         memberService.signup(member);
         return "succ";
+    }
+    @RequestMapping("/members/login")
+    public String login(@Valid LoginForm form, BindingResult result){
+        if (result.hasErrors()) {
+            return null;
+        }
+
+        Member member = new Member();
+
+        member.setLoginId(form.getId());
+        member.setLoginPw(form.getPw());
+
+        String userName = memberService.login(member);
+
+        log.info("Login UserName : " + userName);
+        return userName;
     }
 }

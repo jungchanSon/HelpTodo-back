@@ -24,7 +24,7 @@ public class MemberServiceTest {
         Member member = new Member();
         member.setName("kim");
 
-        Long saveId = memberService.signup(member);
+        String saveId = memberService.signup(member);
 
         assertEquals(member, memberRepository.findOne((saveId)));
 
@@ -41,7 +41,30 @@ public class MemberServiceTest {
         memberService.signup(member1);
         memberService.signup(member2);
 
-        fail("예외가 발생해야 함");
+        fail("예외가 발생해야 함 ");
+
+    }
+
+    @Test
+    public void 로그인(){
+        //given
+        Member member = new Member();
+        member.setName("jungchan");
+        member.setLoginId("son");
+        member.setLoginPw("1234");
+
+        memberService.signup(member);
+
+        //when
+        Member loginMember = new Member();
+        loginMember.setLoginId("son");
+        loginMember.setLoginPw("1324");
+
+        String userName = memberService.login(loginMember);
+
+        //then
+        assertEquals(userName, memberService.findOne("son").getName());
+
 
     }
 

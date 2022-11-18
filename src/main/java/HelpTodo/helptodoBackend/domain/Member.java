@@ -27,18 +27,17 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Member {
 
     @Id @GeneratedValue
-    @Column(name = "member_id")
-    private Long id;
+    private String loginId;
+    private String loginPw;
 
     private String name;
 
     @CreatedDate
     private LocalDateTime createDate;
 
-//    private String loginId;
-//    private String loginPw;
-    @Embedded
-    private LoginIdPw loginIdPw;
+
+//    @Embedded
+//    private LoginIdPw loginIdPw;
 
 //    memberTeam 매핑
     @OneToMany(mappedBy = "member", cascade= CascadeType.ALL)
