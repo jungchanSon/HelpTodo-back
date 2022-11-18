@@ -4,6 +4,7 @@ import HelpTodo.helptodoBackend.domain.Member;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
+@RequiredArgsConstructor
 public class MemberRepository {
 
     @PersistenceContext

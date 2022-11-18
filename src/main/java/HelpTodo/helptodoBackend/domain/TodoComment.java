@@ -1,8 +1,10 @@
 package HelpTodo.helptodoBackend.domain;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,11 +15,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "todo_comment")
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class TodoComment {
 
     @Id
@@ -27,8 +32,8 @@ public class TodoComment {
 
     private String content;
 
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    @CreatedDate
+    private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="todo_id")

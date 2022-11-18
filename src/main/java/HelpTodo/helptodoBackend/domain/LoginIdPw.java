@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Embeddable
 @Getter
+
 public class LoginIdPw {
 
     private String Id;

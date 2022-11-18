@@ -1,14 +1,18 @@
 package HelpTodo.helptodoBackend.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "todolist")
 @Getter @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class Todolist {
 
     @Id @GeneratedValue
@@ -18,6 +22,9 @@ public class Todolist {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    @CreatedDate
+    private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "todolist" , fetch = FetchType.LAZY)
     private List<Todo> todos = new ArrayList<>();
