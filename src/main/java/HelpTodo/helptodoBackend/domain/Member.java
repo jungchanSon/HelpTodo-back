@@ -26,7 +26,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class Member {
 
-    @Id @GeneratedValue
+    @Id
     private String loginId;
     private String loginPw;
 

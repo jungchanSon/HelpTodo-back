@@ -38,7 +38,7 @@ public class MemberController {
         member.setName(signupForm.getName());
 
         member.setLoginId(signupForm.getId());
-        member.setLoginId(signupForm.getPw());
+        member.setLoginPw(signupForm.getPw());
 
         log.info("loginIdPw.getId() = " + member.getLoginId());
         log.info("loginIdPw.getPw() = " + member.getLoginPw());

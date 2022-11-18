@@ -22,33 +22,44 @@ public class MemberService {
     @Transactional
     public String signup(Member member){
         validateDuplicateMember(member);
+        validateEmpty(member);
         memberRepository.save(member);
 
         return member.getLoginId();
     }
 
-    public String login(Member member){
-        String userName = validateLogin(member);
 
-        return userName;
+    public String login(Member member){
+        validateLogin(member);
+        Member one = memberRepository.findOne(member.getLoginId());
+        return one.getName();
     }
 
-    //TODO: 추후에 프론트에 넘겨줄 데이터가 널어나면, 따로 클래스 만들어서 전달할 것.
-    private String validateLogin(Member member) {
+    private void validateEmpty(Member member) {
+
+        if (member.getLoginId() == null) {
+            throw new IllegalStateException("id가 비어 있음");
+        }
+        if (member.getLoginPw() == null){
+            throw new IllegalStateException("pw가 비어 있음");
+        }
+        if (member.getName() == null){
+            throw new IllegalStateException("name이 비어 있음");
+        }
+    }
+
+    private void validateLogin(Member member) {
         Member findMember = memberRepository.findOne(member.getLoginId());
 
         //id 잘못 입력
         if(findMember == null){
             throw new IllegalStateException("아이디 존재 하지 않음");
         }
-
-        //Pw 통과-> 로그인
-        if (findMember.getLoginPw().equals(member.getLoginPw())) {
-            return findMember.getName();
+        //pw 불합격
+        if (!findMember.getLoginPw().equals(member.getLoginPw())) {
+            throw new IllegalStateException("비번 틀림");
         }
 
-        //id , pw 불합격
-        throw new IllegalStateException("비번 틀림");
 
     }
 
