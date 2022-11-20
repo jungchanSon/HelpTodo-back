@@ -2,7 +2,6 @@ package HelpTodo.helptodoBackend.domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Getter;
@@ -29,7 +28,7 @@ public class Team {
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
-    private List<MemberTeam> memberTeams = new ArrayList<>();
+    private List<JoinTeam> joinTeams = new ArrayList<>();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<Todolist> todolists = new ArrayList<>();

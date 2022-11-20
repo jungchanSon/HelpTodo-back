@@ -12,7 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-public class MemberTeam {
+public class JoinTeam {
 
     @Id
     @GeneratedValue
@@ -30,4 +30,21 @@ public class MemberTeam {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    public void setMember(Member member) {
+        this.member = member;
+        member.getJoinTeam().add(this);
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+        team.getJoinTeams().add(this);
+    }
+    public static JoinTeam createMemberTeam(Member member, Team team){
+        JoinTeam joinTeam = new JoinTeam();
+        joinTeam.setMember(member);
+        joinTeam.setTeam(team);
+
+        return joinTeam;
+    }
 }
