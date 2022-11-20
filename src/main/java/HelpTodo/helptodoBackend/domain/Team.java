@@ -23,6 +23,7 @@ public class Team {
     private long id;
 
     private String name;
+    private String teamCode;
 
     @CreatedDate
     private LocalDateTime createDate;
