@@ -27,5 +27,7 @@ public class JoinTeamService {
         JoinTeam joinTeam = JoinTeam.createJoinTeam(member, team);
 
         joinTeamRepository.save(joinTeam);
+
+        return joinTeam.getId();
     }
 }
