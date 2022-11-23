@@ -27,7 +27,7 @@ public class JoinTeam {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
+    @JoinColumn(name = "team_name")
     private Team team;
 
     public void setMember(Member member) {

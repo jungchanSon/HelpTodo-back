@@ -20,9 +20,9 @@ public class JoinTeamService {
     private final JoinTeamRepository joinTeamRepository;
 
     @Transactional
-    public Long join(String memberId, Long teamId){
+    public Long join(String memberId, String teamName){
         Member member = memberRepository.findOne(memberId);
-        Team team = teamRepository.findOne(teamId);
+        Team team = teamRepository.findOne(teamName);
 
         JoinTeam joinTeam = JoinTeam.createJoinTeam(member, team);
 

@@ -1,15 +1,12 @@
 package HelpTodo.helptodoBackend.controller;
 
-import HelpTodo.helptodoBackend.Form.Member.LoginForm;
-import HelpTodo.helptodoBackend.Form.Member.SignupForm;
-import HelpTodo.helptodoBackend.domain.LoginIdPw;
+import HelpTodo.helptodoBackend.form.member.LoginForm;
+import HelpTodo.helptodoBackend.form.member.SignupForm;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.service.MemberService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
-    private final ApplicationContext context;
 
 
     //회원 가입 컨트롤러

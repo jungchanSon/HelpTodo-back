@@ -17,12 +17,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Team {
 
     @Id
-    @GeneratedValue
-    @Column(name = "team_id")
-    private long id;
-
+    @Column(name = "team_name")
     private String name;
     private String teamCode;
+
+    private String password;
 
     @CreatedDate
     private LocalDateTime createDate;
@@ -32,4 +31,5 @@ public class Team {
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<Todolist> todolists = new ArrayList<>();
+
 }
