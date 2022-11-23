@@ -14,10 +14,8 @@ public class TeamRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public void save(Team team){
-        em.persist(team);
-    }
-    public Team findOne(String id){
+
+    public Team findOne(Long id){
         return em.find(Team.class, id);
     }
 
