@@ -16,7 +16,6 @@ public class MemberService {
 
 //    레포지토리 생성자 주입 방식 적용
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
 
 
     @Transactional

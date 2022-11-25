@@ -11,17 +11,26 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class TeamRepository {
+
     @PersistenceContext
     private EntityManager em;
 
     public void save(Team team){
         em.persist(team);
     }
-    public Team findOne(String id){
-        return em.find(Team.class, id);
+
+    public Team findOne(String name){
+        return em.find(Team.class, name);
     }
 
-    public List<Team> findAll(){
+
+    public List<Team> findByName(String name){
+        return em.createQuery("select t from Team t where t.name = :name", Team.class)
+            .setParameter("name", name)
+            .getResultList();
+    }
+
+    public List<Team> findAll(String name){
         return em.createQuery("select t from Team t", Team.class).getResultList();
     }
 }
