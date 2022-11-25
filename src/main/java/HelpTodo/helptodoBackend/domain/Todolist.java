@@ -26,6 +26,13 @@ public class Todolist {
     @CreatedDate
     private LocalDateTime createDate;
 
+    private String title;
+
+    @OneToOne
+    @JoinColumn(name = "memberId")
+    private Member member;
+
+
     @OneToMany(mappedBy = "todolist" , fetch = FetchType.LAZY)
     private List<Todo> todos = new ArrayList<>();
 

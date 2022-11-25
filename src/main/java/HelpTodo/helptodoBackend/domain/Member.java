@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,9 @@ public class Member {
 
 //    @Embedded
 //    private LoginIdPw loginIdPw;
+
+    @OneToOne(mappedBy = "member")
+    private Todolist todolist;
 
 //    memberTeam 매핑
     @OneToMany(mappedBy = "member", cascade= CascadeType.ALL)
