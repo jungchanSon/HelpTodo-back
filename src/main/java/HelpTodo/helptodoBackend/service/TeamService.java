@@ -18,6 +18,8 @@ public class TeamService {
     @Transactional
     public String createTeam(Team team) {
         validateDuplicateTeam(team);
+        validateEmpty(team);
+        //TODO : 회원이 로그인한 상태인지 검증 추가하기
 
         teamRepository.save(team);
 
@@ -32,6 +34,12 @@ public class TeamService {
         return team;
     }
 
+
+    private void validateEmpty(Team team) {
+        if(team.getName() == null){
+            throw new IllegalStateException("팀 이름 공백");
+        }
+    }
 
     private void validateDuplicateTeam(Team team) {
         List<Team> findTeams = teamRepository.findByName(team.getName());
