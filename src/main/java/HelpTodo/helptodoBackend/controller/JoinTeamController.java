@@ -21,9 +21,11 @@ public class JoinTeamController {
     private final TeamService teamService;
 
     @RequestMapping("/jointeam/join")
-    public void joinTeam(@RequestParam("userId") String userId,
+    public String joinTeam(@RequestParam("userId") String userId,
                          @RequestParam("teamName") String teamName){
 
         joinTeamService.join(userId, teamName);
+
+        return "succ";
     }
 }
