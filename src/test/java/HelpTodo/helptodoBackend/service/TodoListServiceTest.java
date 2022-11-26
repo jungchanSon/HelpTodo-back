@@ -44,29 +44,20 @@ public class TodoListServiceTest {
         todoListService.createTodoList(todolist);
 
         Todolist todolist2 = new Todolist();
-        todolist.setTitle("todolist2");
-        todolist.setTeam(team1);
+        todolist2.setTitle("todolist2");
+        todolist2.setTeam(team1);
         todoListService.createTodoList(todolist2);
 
         Todolist todolist3 = new Todolist();
-        todolist.setTitle("todolist3");
-        todolist.setTeam(team2);
+        todolist3.setTitle("todolist3");
+        todolist3.setTeam(team2);
         todoListService.createTodoList(todolist3);
 
-        Todolist todolist4 = new Todolist();
-        todolist.setTitle("todolist4");
-        todolist.setTeam(team2);
-        todoListService.createTodoList(todolist4);
 
-        List<Todolist> findTodoL = todoListRepository.findAllByTeamName(team2.getName());
-        List<Todolist> all = todoListRepository.findAll();
-        System.out.println(all.size());
 
-        for(Todolist item : all){
-            System.out.println(item.getTeam().getName());
-        }
+        List<Todolist> findTodoL = todoListRepository.findAllByTeamName(team1.getName());
 
-        assertEquals(4, all.size());
+        assertEquals(2, findTodoL.size());
     }
 
     private Member createMember(String name){

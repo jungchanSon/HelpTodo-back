@@ -19,7 +19,6 @@ public class Todolist {
     @Column(name = "todolist_id")
     private Long id;
 
-
     @CreatedDate
     private LocalDateTime createDate;
 
