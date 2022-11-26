@@ -25,4 +25,11 @@ public class TodoListRepository {
 
         return todoLists;
     }
+
+    public List<Todolist> findAll(){
+        List<Todolist> select_tl_from_todolist_tl = em.createQuery("select tl from Todolist tl",
+                                                                   Todolist.class).getResultList();
+
+        return select_tl_from_todolist_tl;
+    }
 }

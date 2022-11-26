@@ -19,14 +19,15 @@ public class Todolist {
     @Column(name = "todolist_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_name")
-    private Team team;
 
     @CreatedDate
     private LocalDateTime createDate;
 
     private String title;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_name")
+    private Team team;
 
     @OneToOne
     @JoinColumn(name = "memberId")
@@ -41,4 +42,6 @@ public class Todolist {
 
     @OneToMany(mappedBy = "todolist", fetch = FetchType.LAZY)
     private List<Done> done = new ArrayList<>();
+
+
 }
