@@ -1,5 +1,8 @@
 package HelpTodo.helptodoBackend.service;
 
+import HelpTodo.helptodoBackend.domain.Doing;
+import HelpTodo.helptodoBackend.domain.Done;
+import HelpTodo.helptodoBackend.domain.Todo;
 import HelpTodo.helptodoBackend.domain.TodoList;
 import HelpTodo.helptodoBackend.repository.TodoListRepository;
 import java.util.List;
@@ -15,15 +18,35 @@ public class TodoListService {
     private final TodoListRepository todoListRepository;
 
     @Transactional
-    public String createTodoList(TodoList todolist){
+    public Long createTodoList(TodoList todolist){
 
         todoListRepository.save(todolist);
-        return todolist.getTitle();
+        return todolist.getId();
     }
 
     public List<TodoList> findAllByTeamName(String teamName){
         List<TodoList> allTeam = todoListRepository.findAllByTeamName(teamName);
-
         return allTeam;
+    }
+
+    public void createTDDEntity(Long todoListId, Object TDDEntity){
+
+        TodoList findTodolist = todoListRepository.findOneById(todoListId);
+
+        if (TDDEntity.getClass() == Todo.class) {
+            findTodolist.getTodos().add((Todo)TDDEntity);
+            todoListRepository.save(findTodolist);
+
+        } else if(TDDEntity.getClass() == Doing.class){
+            findTodolist.getDoings().add((Doing) TDDEntity);
+            todoListRepository.save(findTodolist);
+
+        } else if(TDDEntity.getClass() == Done.class){
+            findTodolist.getDones().add((Done) TDDEntity);
+            todoListRepository.save(findTodolist);
+
+        }
+
+
     }
 }
