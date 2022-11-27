@@ -1,9 +1,7 @@
 package HelpTodo.helptodoBackend.controller;
 
-import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.form.team.CreateTeamForm;
-import HelpTodo.helptodoBackend.service.JoinTeamService;
 import HelpTodo.helptodoBackend.service.MemberService;
 import HelpTodo.helptodoBackend.service.TeamService;
 import javax.validation.Valid;
