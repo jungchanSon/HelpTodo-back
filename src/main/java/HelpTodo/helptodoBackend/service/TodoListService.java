@@ -1,6 +1,6 @@
 package HelpTodo.helptodoBackend.service;
 
-import HelpTodo.helptodoBackend.domain.Todolist;
+import HelpTodo.helptodoBackend.domain.TodoList;
 import HelpTodo.helptodoBackend.repository.TodoListRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +15,14 @@ public class TodoListService {
     private final TodoListRepository todoListRepository;
 
     @Transactional
-    public String createTodoList(Todolist todolist){
+    public String createTodoList(TodoList todolist){
 
         todoListRepository.save(todolist);
         return todolist.getTitle();
     }
 
-    public List<Todolist> findAllByTeamName(String teamName){
-        List<Todolist> allTeam = todoListRepository.findAllByTeamName(teamName);
+    public List<TodoList> findAllByTeamName(String teamName){
+        List<TodoList> allTeam = todoListRepository.findAllByTeamName(teamName);
 
         return allTeam;
     }

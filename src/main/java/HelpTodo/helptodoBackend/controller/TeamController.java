@@ -1,9 +1,8 @@
 package HelpTodo.helptodoBackend.controller;
 
-import HelpTodo.helptodoBackend.domain.Member;
+import HelpTodo.helptodoBackend.Form.team.JoinTeamForm;
 import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.form.team.CreateTeamForm;
-import HelpTodo.helptodoBackend.service.JoinTeamService;
 import HelpTodo.helptodoBackend.service.MemberService;
 import HelpTodo.helptodoBackend.service.TeamService;
 import javax.validation.Valid;
@@ -20,7 +19,6 @@ public class TeamController {
 
     private final TeamService teamService;
     private final MemberService memberService;
-    private final JoinTeamService joinTeamService;
 
     //생성 후 -> 생성된 팀에 멤버 가입 시키기
     @RequestMapping("/team/create")
@@ -35,9 +33,21 @@ public class TeamController {
         team.setName(createTeamForm.getTeamName());
         team.setPassword(createTeamForm.getTeamPassword());
 
-        String teamId = teamService.createTeam(team);
+//        String teamId = teamService.createTeam(team);
 
-        joinTeamService.join(createTeamForm.getMemberId(), teamId);
+//        joinTeamService.join(createTeamForm.getMemberId(), teamId);
+
+        return "succ";
+    }
+
+    @RequestMapping("/team/join")
+    public String joinTeam(@Valid JoinTeamForm joinTeamForm, BindingResult result){
+
+        if (result.hasErrors()) {
+            return "fail";
+        }
+
+        Long join = teamService.join(joinTeamForm.getUserId(), joinTeamForm.getTeamName());
 
         return "succ";
     }

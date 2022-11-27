@@ -30,7 +30,7 @@ public class TeamRepository {
             .getResultList();
     }
 
-    public List<Team> findAll(String name){
+    public List<Team> findAll(){
         return em.createQuery("select t from Team t", Team.class).getResultList();
     }
 }

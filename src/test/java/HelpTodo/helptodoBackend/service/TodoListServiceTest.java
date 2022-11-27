@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.domain.Team;
-import HelpTodo.helptodoBackend.domain.Todolist;
+import HelpTodo.helptodoBackend.domain.TodoList;
 import HelpTodo.helptodoBackend.repository.TodoListRepository;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -38,35 +38,26 @@ public class TodoListServiceTest {
         Team team1 = createTeam("team1");
         Team team2 = createTeam("team2");
 
-        Todolist todolist = new Todolist();
+        TodoList todolist = new TodoList();
         todolist.setTitle("todolist");
         todolist.setTeam(team1);
         todoListService.createTodoList(todolist);
 
-        Todolist todolist2 = new Todolist();
-        todolist.setTitle("todolist2");
-        todolist.setTeam(team1);
+        TodoList todolist2 = new TodoList();
+        todolist2.setTitle("todolist2");
+        todolist2.setTeam(team1);
         todoListService.createTodoList(todolist2);
 
-        Todolist todolist3 = new Todolist();
-        todolist.setTitle("todolist3");
-        todolist.setTeam(team2);
+        TodoList todolist3 = new TodoList();
+        todolist3.setTitle("todolist3");
+        todolist3.setTeam(team2);
         todoListService.createTodoList(todolist3);
 
-        Todolist todolist4 = new Todolist();
-        todolist.setTitle("todolist4");
-        todolist.setTeam(team2);
-        todoListService.createTodoList(todolist4);
 
-        List<Todolist> findTodoL = todoListRepository.findAllByTeamName(team2.getName());
-        List<Todolist> all = todoListRepository.findAll();
-        System.out.println(all.size());
 
-        for(Todolist item : all){
-            System.out.println(item.getTeam().getName());
-        }
+        List<TodoList> findTodoL = todoListRepository.findAllByTeamName(team1.getName());
 
-        assertEquals(4, all.size());
+        assertEquals(2, findTodoL.size());
     }
 
     private Member createMember(String name){
