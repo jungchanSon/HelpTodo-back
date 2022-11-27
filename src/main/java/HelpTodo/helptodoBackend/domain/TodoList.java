@@ -55,17 +55,19 @@ public class TodoList {
         member.setTodolist(this);
     }
 
-    private void addTodos(Todo todo) {
+    // TODO: 2022-11-27 요부분 다시 생각해보기
+    // public / private 고민해보기
+    public void addTodos(Todo todo) {
         this.todos.add(todo);
         todo.setTodolist(this);
     }
 
-    private void addDoing(Doing doing) {
+    public void addDoing(Doing doing) {
         this.doings.add(doing);
         doing.setTodolist(this);
     }
 
-    private void addDone(Done done) {
+    public void addDone(Done done) {
         this.dones.add(done);
         done.setTodolist(this);
     }
