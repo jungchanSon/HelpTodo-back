@@ -48,4 +48,19 @@ public class Done {
     @OneToMany(mappedBy = "done")
     private List<TodoComment> todoComments = new ArrayList<>();
 
+
+    public void setMember(Member member) {
+        this.member = member;
+        member.getDones().add(this);
+    }
+
+    public static Done createDone(String content, int importance, Member member){
+        Done done = new Done();
+        done.setContent(content);
+        done.setImportance(importance);
+
+        done.setMember(member);
+
+        return done;
+    }
 }
