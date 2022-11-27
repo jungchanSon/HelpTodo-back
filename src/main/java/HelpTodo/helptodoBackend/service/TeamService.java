@@ -60,7 +60,7 @@ public class TeamService {
     private void validateDuplicateTeam(Team team) {
         List<Team> findTeams = teamRepository.findByName(team.getName());
         if (!findTeams.isEmpty()) {
-            throw new IllegalStateException("중복 회원");
+            throw new IllegalStateException("");
         }
     }
 }

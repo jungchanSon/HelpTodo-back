@@ -56,19 +56,30 @@ public class TeamServiceTest {
         Member member = createMember("son", "son", "son");
         Member member1 = createMember("jung", "jung", "jung");
 
-        JoinTeam joinTeam = new JoinTeam();
-        joinTeam.setMember(member);
-//        Team t1 = Team.createTeam("t", joinTeam);
+        Team team = new Team();
+        team.setName("team");
 
-//        String createTeam = teamService.createTeam(t1);
+        Team team2 = new Team();
+        team2.setName("team2");
 
-        Team t = teamService.findTeamByName("t");
-        List<JoinTeam> joinTeams = t.getJoinTeams();
+        teamService.createTeam(member.getName(), team);
+        teamService.createTeam(member1.getName(), team2);
+        teamService.join(member1.getLoginId(), team.getName());
 
-        for(JoinTeam jt : joinTeams){
-            System.out.println(jt.getMember().getName()+"--"+jt.getTeam().getName());
+        Team findOne = teamRepository.findOne(team.getName());
+        Team findOne2 = teamRepository.findOne(team2.getName());
+
+        List<JoinTeam> joinTeams1 = findOne.getJoinTeams();
+        List<JoinTeam> joinTeams2 = findOne2.getJoinTeams();
+
+        for(JoinTeam joinTeam : joinTeams1) {
+            System.out.println(joinTeam.getMember().getName());
         }
-        System.out.println(teamRepository.findAll());
+        for(JoinTeam joinTeam : joinTeams2) {
+            System.out.println(joinTeam.getMember().getName());
+        }
+        assertEquals(2, joinTeams1.size());
+        assertEquals(1, joinTeams2.size());
     }
 
     private Member createMember(String name, String Id, String Pw){
@@ -82,5 +93,13 @@ public class TeamServiceTest {
         return member;
     }
 
+    private Team createTeam(String name){
+        Team team = new Team();
+        team.setName(name);
+
+        em.persist(team);
+        
+        return team;
+    }
 
 }

@@ -32,6 +32,12 @@ public class Team {
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<Todolist> todolists = new ArrayList<>();
 
+    public void add(JoinTeam joinTeam){
+        joinTeam.setTeam(this);
+        this.joinTeams.add(joinTeam);
+
+    }
+
 //    public void addJoinTeam (JoinTeam joinTeam) {
 //        joinTeams.add(joinTeam);
 //        joinTeam.setTeam(this);
