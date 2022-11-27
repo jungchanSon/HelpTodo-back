@@ -42,14 +42,20 @@ public class TeamService {
         return joinTeam.getId();
     }
 
-    public Team findTeamByName(String name){
+//    public Team findTeamsByName(String name){
+//
+//        List<Team> findTeams = teamRepository.findByName(name);
+//        Team team = findTeams.get(0);
+//
+//        return team;
+//    }
 
-        List<Team> findTeams = teamRepository.findByName(name);
-        Team team = findTeams.get(0);
+    public Team findOneByName(String name){
 
-        return team;
+        Team findTeam = teamRepository.findOne(name);
+
+        return findTeam;
     }
-
 
     private void validateEmpty(Team team) {
         if(team.getName() == null){
