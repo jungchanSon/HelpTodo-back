@@ -35,7 +35,7 @@ public class Member {
 //    private LoginIdPw loginIdPw;
 
     @OneToOne(mappedBy = "member")
-    private Todolist todolist;
+    private TodoList todolist;
 
 //    memberTeam 매핑
     @OneToMany(mappedBy = "member", cascade= CascadeType.ALL)

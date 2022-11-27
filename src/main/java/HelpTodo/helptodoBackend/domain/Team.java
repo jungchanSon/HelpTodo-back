@@ -30,7 +30,7 @@ public class Team {
     private List<JoinTeam> joinTeams = new ArrayList<>();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
-    private List<Todolist> todolists = new ArrayList<>();
+    private List<TodoList> todolists = new ArrayList<>();
 
     public void add(JoinTeam joinTeam){
         joinTeam.setTeam(this);
