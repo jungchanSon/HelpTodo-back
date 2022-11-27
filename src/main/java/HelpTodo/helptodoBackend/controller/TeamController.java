@@ -35,9 +35,9 @@ public class TeamController {
         team.setName(createTeamForm.getTeamName());
         team.setPassword(createTeamForm.getTeamPassword());
 
-        String teamId = teamService.createTeam(team);
+//        String teamId = teamService.createTeam(team);
 
-        joinTeamService.join(createTeamForm.getMemberId(), teamId);
+//        joinTeamService.join(createTeamForm.getMemberId(), teamId);
 
         return "succ";
     }

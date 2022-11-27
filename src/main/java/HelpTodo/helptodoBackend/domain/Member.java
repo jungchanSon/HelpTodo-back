@@ -17,7 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name="members")
-@Getter @Setter
+@Getter @Setter // TODO: 2022-11-27 Setter 지우기.
 @EntityListeners(AuditingEntityListener.class)
 public class Member {
 
@@ -54,4 +54,17 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<TodoComment> todoComments = new ArrayList<>();
 
+//
+//    private List<JoinTeam> addJoinTeam(JoinTeam joinTeam){
+//        this.joinTeams.add
+//    }
+//
+//    private void createMember(String name, String id, String pw, JoinTeam joinTeam) {
+//        Member member = new Member();
+//
+//        member.name = name;
+//        member.loginId =id;
+//        member.loginPw = pw;
+//
+//    }
 }
