@@ -5,6 +5,7 @@ import HelpTodo.helptodoBackend.form.member.SignupForm;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.service.MemberService;
 import javax.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -13,15 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
 
-
     //회원 가입 컨트롤러
-    @RequestMapping("/members/signup")
+    @RequestMapping(value = "/members/signup")
     public String signup(@Valid SignupForm signupForm, BindingResult result){
 //        Environment env = context.getEnvironment();
         

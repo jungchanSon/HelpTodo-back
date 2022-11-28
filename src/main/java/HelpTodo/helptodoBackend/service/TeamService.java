@@ -41,7 +41,12 @@ public class TeamService {
         teamRepository.save(team);
         return joinTeam.getId();
     }
+    public List<Team> findAllTeams(){
 
+        List<Team> findAllTeams = teamRepository.findAll();
+
+        return findAllTeams;
+    }
     public Team findTeamsByName(String name){
 
         List<Team> findTeams = teamRepository.findByName(name);
@@ -69,4 +74,6 @@ public class TeamService {
             throw new IllegalStateException("");
         }
     }
+
+
 }
