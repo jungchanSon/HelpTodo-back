@@ -2,8 +2,11 @@ package HelpTodo.helptodoBackend.service;
 
 import static org.junit.Assert.*;
 
+import HelpTodo.helptodoBackend.domain.Doing;
+import HelpTodo.helptodoBackend.domain.Done;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.domain.Team;
+import HelpTodo.helptodoBackend.domain.Todo;
 import HelpTodo.helptodoBackend.domain.TodoList;
 import HelpTodo.helptodoBackend.repository.TodoListRepository;
 import java.util.List;
@@ -21,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 public class TodoListServiceTest {
-
     @PersistenceContext
     EntityManager em;
 
@@ -33,7 +35,7 @@ public class TodoListServiceTest {
 
 
     @Test
-    public void 투두리스트생성(){
+    public void 투두리스트여러사람생성(){
 
         Team team1 = createTeam("team1");
         Team team2 = createTeam("team2");
@@ -60,6 +62,66 @@ public class TodoListServiceTest {
         assertEquals(2, findTodoL.size());
     }
 
+    @Test
+    public void 투두리스트생성(){
+        //투두리스트 생성
+        Member member = createMember("member");
+        Team team = createTeam("team");
+
+        TodoList todolist = TodoList.createTodolist("todolist", team, member);
+        Long todoListId = todoListService.createTodoList(todolist);
+
+        TodoList findTodoList = todoListRepository.findOneById(todoListId);
+        printTodo(findTodoList);
+        assertEquals(todolist, findTodoList);
+    }
+
+    @Test
+    public void 투두리스트TDD추가(){
+        Member member = createMember("member");
+        Team team = createTeam("team");
+
+        TodoList todolist = TodoList.createTodolist("todolist", team, member);
+        Long todoListId = todoListService.createTodoList(todolist);
+
+        //저장된 투두리스트
+        Todo todo = new Todo();
+        todo.setContent("todo1");
+
+        Doing doing = new Doing();
+        doing.setContent("doing1");
+
+        Done done = new Done();
+        done.setContent("Done1");
+
+        todoListService.createTDDEntity(todoListId, todo);
+        todoListService.createTDDEntity(todoListId, doing);
+        todoListService.createTDDEntity(todoListId, done);
+
+        Todo todo2 = new Todo();
+        todo2.setContent("todo2");
+
+        Done done2 = new Done();
+        done2.setContent("Done2");
+
+        todoListService.createTDDEntity(todoListId, todo2);
+        todoListService.createTDDEntity(todoListId, done2);
+
+        TodoList findtodolist = todoListRepository.findOneById(todoListId);
+
+        printTodo(findtodolist);
+
+        int sumSize = findtodolist.getTodos().size() + findtodolist.getDoings().size()
+            + findtodolist.getDones().size();
+
+        assertEquals(5, sumSize);
+    }
+
+    @Test
+    public void 투두리스트조회(){
+
+    }
+
     private Member createMember(String name){
 
         Member member = new Member();
@@ -81,8 +143,26 @@ public class TodoListServiceTest {
         return team;
     }
 
-    @Test
-    public void 투두리스트조회(){
 
+
+    private void printTodo(TodoList findTodoList) {
+        System.out.println("id : " + findTodoList.getId());
+        System.out.println("title : " + findTodoList.getTitle());
+        System.out.println("mem : " + findTodoList.getMember());
+        System.out.println("team : " + findTodoList.getTeam());
+        System.out.println();
+        System.out.println("TODOS");
+        for (Todo t : findTodoList.getTodos()){
+            System.out.println(t.getContent());
+        }
+        System.out.println("DOINGS");
+        for (Doing d : findTodoList.getDoings()){
+            System.out.println(d.getContent());
+        }
+        System.out.println("DONES");
+        for (Done d : findTodoList.getDones()){
+            System.out.println(d.getContent());
+        }
     }
+
 }

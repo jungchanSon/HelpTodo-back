@@ -82,6 +82,8 @@ public class TeamServiceTest {
         assertEquals(1, joinTeams2.size());
     }
 
+
+
     private Member createMember(String name, String Id, String Pw){
         Member member = new Member();
         member.setName(name);

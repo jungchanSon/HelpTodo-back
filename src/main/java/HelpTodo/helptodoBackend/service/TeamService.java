@@ -41,8 +41,13 @@ public class TeamService {
         teamRepository.save(team);
         return joinTeam.getId();
     }
+    public List<Team> findAllTeams(){
 
-    public Team findTeamByName(String name){
+        List<Team> findAllTeams = teamRepository.findAll();
+
+        return findAllTeams;
+    }
+    public Team findTeamsByName(String name){
 
         List<Team> findTeams = teamRepository.findByName(name);
         Team team = findTeams.get(0);
@@ -50,6 +55,12 @@ public class TeamService {
         return team;
     }
 
+    public Team findOneByName(String name){
+
+        Team findTeam = teamRepository.findOne(name);
+
+        return findTeam;
+    }
 
     private void validateEmpty(Team team) {
         if(team.getName() == null){
@@ -63,4 +74,6 @@ public class TeamService {
             throw new IllegalStateException("");
         }
     }
+
+
 }

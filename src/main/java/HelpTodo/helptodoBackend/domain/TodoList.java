@@ -22,8 +22,6 @@ public class TodoList {
     @CreatedDate
     private LocalDateTime createDate;
 
-
-
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -72,28 +70,17 @@ public class TodoList {
         done.setTodolist(this);
     }
 
-    public static TodoList Todolist(
+    public static TodoList createTodolist(
         String title,
         Team team,
-        Member member,
-        List<Todo> todos,
-        List<Doing> doings,
-        List<Done> dones
+        Member member
     ) {
         TodoList todoList = new TodoList();
         todoList.setTitle(title);
         todoList.setTeam(team);
         todoList.setMember(member);
 
-        for(Todo todo: todos){
-            todoList.addTodos(todo);
-        }
-        for(Doing doing: doings){
-            todoList.addDoing(doing);
-        }
-        for(Done done: dones){
-            todoList.addDone(done);
-        }
+
 
         return todoList;
     }
