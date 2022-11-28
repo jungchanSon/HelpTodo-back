@@ -72,7 +72,9 @@ public class TeamController {
         if (!allTeams.isEmpty()) {
             for(Team t : allTeams) {
 
-                list.add(new FindTeam(t.getName(), t.getCreator(), t.getCreateDate()));
+                FindTeam findTeam = FindTeam.responseFindTeam(t.getName(), t.getCreator(), t.getCreateDate());
+
+                list.add(findTeam);
             }
             return list;
         }
