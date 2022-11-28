@@ -1,5 +1,6 @@
 package HelpTodo.helptodoBackend.controller;
 
+import HelpTodo.helptodoBackend.DTO.teamContoller.FindTeam;
 import HelpTodo.helptodoBackend.Form.team.JoinTeamForm;
 import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.form.team.CreateTeamForm;
@@ -63,15 +64,15 @@ public class TeamController {
     }
 
     @GetMapping(value = "/team/findTeamList" )
-    public List<Team> findTeamList(){
+    public List<FindTeam> findTeamList(){
 
         List<Team> allTeams = teamService.findAllTeams();
-        List<Team> list = new ArrayList<>();
+        List<FindTeam> list = new ArrayList<>();
+
         if (!allTeams.isEmpty()) {
             for(Team t : allTeams) {
-                t.getName();
-                list.add(t);
-                System.out.println(t.getName());
+
+                list.add(new FindTeam(t.getName(), t.getCreator(), t.getCreateDate()));
             }
             return list;
         }
