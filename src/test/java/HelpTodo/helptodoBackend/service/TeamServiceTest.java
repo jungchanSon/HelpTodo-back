@@ -81,7 +81,17 @@ public class TeamServiceTest {
         assertEquals(2, joinTeams1.size());
         assertEquals(1, joinTeams2.size());
     }
+    @Test
+    public void 내팀조회(){
+        Member member = createMember("son", "son", "son");
+        Team team1 = createTeam("team1");
+        Team team2 = createTeam("team2");
 
+        teamService.join(member.getLoginId(), "team1");
+
+        List<Team> myTeams = teamService.findMyTeams(member.getLoginId());
+        assertEquals(1, myTeams.size());
+    }
     @Test
     public void 모든팀조회(){
         Team team1 = createTeam("team1");

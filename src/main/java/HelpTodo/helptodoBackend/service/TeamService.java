@@ -5,6 +5,7 @@ import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.repository.MemberRepository;
 import HelpTodo.helptodoBackend.repository.TeamRepository;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,9 +48,25 @@ public class TeamService {
 
         return findAllTeams;
     }
+
+    public List<Team> findMyTeams(String memberId){
+
+        List<Team> teams = new ArrayList<>();
+
+        Member member = memberRepository.findOne(memberId);
+        List<JoinTeam> myJoinTeam = member.getJoinTeam();
+
+        for(JoinTeam jt : myJoinTeam){
+            Team myteam = jt.getTeam();
+
+            teams.add(myteam);
+        }
+        return teams;
+    }
+
     public Team findTeamsByName(String name){
 
-        List<Team> findTeams = teamRepository.findByName(name);
+        List<Team> findTeams = teamRepository.findByTeamName(name);
         Team team = findTeams.get(0);
 
         return team;
@@ -69,7 +86,7 @@ public class TeamService {
     }
 
     private void validateDuplicateTeam(Team team) {
-        List<Team> findTeams = teamRepository.findByName(team.getName());
+        List<Team> findTeams = teamRepository.findByTeamName(team.getName());
         if (!findTeams.isEmpty()) {
             throw new IllegalStateException("");
         }
