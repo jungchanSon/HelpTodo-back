@@ -5,6 +5,7 @@ import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.form.team.CreateTeamForm;
 import HelpTodo.helptodoBackend.service.MemberService;
 import HelpTodo.helptodoBackend.service.TeamService;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +41,7 @@ public class TeamController {
         Team team = new Team();
         team.setName(teamName);
         team.setPassword(teamPassword);
+        team.setCreator(memberId);
 
         String teamId = teamService.createTeam(memberId, team);
 
@@ -59,18 +62,18 @@ public class TeamController {
         return "succ";
     }
 
-    @RequestMapping(value = "/team/findTeamList" )
-    public Map findTeamList(){
+    @GetMapping(value = "/team/findTeamList" )
+    public List<Team> findTeamList(){
 
         List<Team> allTeams = teamService.findAllTeams();
+        List<Team> list = new ArrayList<>();
         if (!allTeams.isEmpty()) {
-
-            Map findResult = new HashMap<String, Object>();
             for(Team t : allTeams) {
+                t.getName();
+                list.add(t);
                 System.out.println(t.getName());
-                findResult.put(t.getName(), t);
             }
-            return findResult;
+            return list;
         }
         return null;
     }

@@ -23,6 +23,8 @@ public class Team {
 
     private String password;
 
+    private String creator;
+
     @CreatedDate
     private LocalDateTime createDate;
 
@@ -31,6 +33,10 @@ public class Team {
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<TodoList> todolists = new ArrayList<>();
+
+    public void setCreator(String memberId){
+        this.creator = memberId;
+    }
 
     public void add(JoinTeam joinTeam){
         joinTeam.setTeam(this);

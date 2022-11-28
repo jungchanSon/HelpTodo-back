@@ -82,7 +82,19 @@ public class TeamServiceTest {
         assertEquals(1, joinTeams2.size());
     }
 
+    @Test
+    public void 모든팀조회(){
+        Team team1 = createTeam("team1");
+        Team team2 = createTeam("team2");
 
+        List<Team> allTeams = teamService.findAllTeams();
+
+        for(Team team : allTeams){
+            System.out.println(team.getName());
+        }
+
+        assertEquals(2, allTeams.size());
+    }
 
     private Member createMember(String name, String Id, String Pw){
         Member member = new Member();
