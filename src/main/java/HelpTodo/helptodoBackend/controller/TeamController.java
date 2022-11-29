@@ -6,6 +6,7 @@ import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.form.team.CreateTeamForm;
 import HelpTodo.helptodoBackend.service.MemberService;
 import HelpTodo.helptodoBackend.service.TeamService;
+import com.fasterxml.jackson.core.JsonParser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.parser.JSONParser;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -83,9 +85,19 @@ public class TeamController {
         return null;
     }
     @GetMapping(value = "/team/findMyTeam" )
-    public void findMyTeams(@RequestParam(name="userId") String userId){
+    public List<FindTeam> findMyTeams(@RequestParam(name="userId") String userId){
 
+        List<Team> myTeams = teamService.findMyTeams(userId);
 
+        List<FindTeam> resultTeams = new ArrayList<>();
+        for(Team t : myTeams){
+            FindTeam findTeam = FindTeam.responseFindTeam(t.getName(),
+                                                          t.getCreator(),
+                                                          t.getCreateDate());
+
+            resultTeams.add(findTeam);
+        }
+        return resultTeams;
     }
 
 }
