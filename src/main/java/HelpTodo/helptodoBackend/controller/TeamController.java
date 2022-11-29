@@ -57,12 +57,22 @@ public class TeamController {
 
     @RequestMapping("/team/join")
     public String joinTeam(@Valid JoinTeamForm joinTeamForm, BindingResult result){
-
+        System.out.println(joinTeamForm.getUserId());
+        System.out.println(joinTeamForm.getTeamName());
+        System.out.println(joinTeamForm.getTeamPassword());
         if (result.hasErrors()) {
             return "fail";
         }
 
-        Long join = teamService.join(joinTeamForm.getUserId(), joinTeamForm.getTeamName());
+        if(joinTeamForm.getTeamPassword() != null){
+            System.out.println("join 3 param");
+            teamService.join(joinTeamForm.getUserId(),
+                             joinTeamForm.getTeamName(),
+                             joinTeamForm.getTeamPassword());
+        } else{
+            Long join = teamService.join(joinTeamForm.getUserId(), joinTeamForm.getTeamName());
+        }
+
 
         return "succ";
     }
@@ -84,6 +94,22 @@ public class TeamController {
         }
         return null;
     }
+
+    @GetMapping(value = "/team/findOtherTeamList" )
+    public List<FindTeam> findOtherTeamList(@RequestParam(name="userId") String userId){
+
+        List<Team> allTeams = teamService.findOtherTeams(userId);
+        List<FindTeam> resultTeams = new ArrayList<>();
+        for(Team t : allTeams){
+            FindTeam findTeam = FindTeam.responseFindTeam(t.getName(),
+                                                          t.getCreator(),
+                                                          t.getCreateDate());
+
+            resultTeams.add(findTeam);
+        }
+        return resultTeams;
+    }
+
     @GetMapping(value = "/team/findMyTeam" )
     public List<FindTeam> findMyTeams(@RequestParam(name="userId") String userId){
 

@@ -92,6 +92,15 @@ public class TeamServiceTest {
         List<Team> myTeams = teamService.findMyTeams(member.getLoginId());
         assertEquals(1, myTeams.size());
     }
+
+    @Test
+    public void 비번으로입장(){
+        Team team1 = createTeam("team1");
+        Member member1 = createMember("member1", "member1", "member1");
+        teamService.join(member1.getLoginId(), "team1", "1234");
+        teamService.join(member1.getLoginId(), "team1");
+    }
+
     @Test
     public void 모든팀조회(){
         Team team1 = createTeam("team1");
@@ -120,7 +129,7 @@ public class TeamServiceTest {
     private Team createTeam(String name){
         Team team = new Team();
         team.setName(name);
-
+        team.setPassword("1234");
         em.persist(team);
         
         return team;

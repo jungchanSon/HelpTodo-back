@@ -30,6 +30,16 @@ public class TeamRepository {
             .getResultList();
     }
 
+    public List<Team> findTeamWithoutUser(String userId){
+        return em.createQuery("select jt.team from JoinTeam jt where jt.member.loginId <> :userId", Team.class)
+            .setParameter("userId", userId)
+            .getResultList();
+//        (select team.* from team, member_team  where member_team.member_id <> :userId, Team.class)
+//        .setParameter("userId", userId)
+//            .getResultList();
+//        순수 SQL은 위처럼...
+    }
+
     public List<Team> findAll(){
         return em.createQuery("select t from Team t", Team.class).getResultList();
     }

@@ -33,6 +33,30 @@ public class TeamService {
     }
 
     @Transactional
+    public Long join(String memberId, String teamName, String teamPassword){
+        Member member = memberRepository.findOne(memberId);
+        Team team = teamRepository.findOne(teamName);
+
+        System.out.println("join ser : ");
+        System.out.println(team.getPassword());
+        System.out.println(teamPassword);
+        validateTeamPassword(team, teamPassword);
+
+        JoinTeam joinTeam = JoinTeam.createJoinTeam(member, team);
+
+        teamRepository.save(team);
+        return joinTeam.getId();
+    }
+
+    private void validateTeamPassword(Team team, String teamPassword) {
+        String collectPassword = team.getPassword();
+
+        if(!collectPassword.equals(teamPassword)){
+            throw new IllegalStateException(collectPassword + "  " + teamPassword);
+        }
+    }
+
+    @Transactional
     public Long join(String memberId, String teamName){
         Member member = memberRepository.findOne(memberId);
         Team team = teamRepository.findOne(teamName);
@@ -62,6 +86,14 @@ public class TeamService {
             teams.add(myteam);
         }
         return teams;
+    }
+
+    public List<Team> findOtherTeams(String memberId){
+
+        List<Team> teams = new ArrayList<>();
+
+        List<Team> teamWithoutUser = teamRepository.findTeamWithoutUser(memberId);
+        return teamWithoutUser;
     }
 
     public Team findTeamsByName(String name){

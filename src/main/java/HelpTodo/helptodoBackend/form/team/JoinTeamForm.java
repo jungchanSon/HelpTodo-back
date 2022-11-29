@@ -8,4 +8,5 @@ import lombok.Setter;
 public class JoinTeamForm {
     String userId;
     String teamName;
+    String teamPassword;
 }
