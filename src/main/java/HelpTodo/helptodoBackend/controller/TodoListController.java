@@ -1,6 +1,8 @@
 package HelpTodo.helptodoBackend.controller;
 
+import HelpTodo.helptodoBackend.DTO.TodoListController.ResponseTodoList;
 import HelpTodo.helptodoBackend.Form.TodoListForm.AddTDDForm;
+import HelpTodo.helptodoBackend.Form.TodoListForm.AllTodoListForm;
 import HelpTodo.helptodoBackend.Form.TodoListForm.CreateTodoListForm;
 import HelpTodo.helptodoBackend.domain.Doing;
 import HelpTodo.helptodoBackend.domain.Done;
@@ -11,6 +13,8 @@ import HelpTodo.helptodoBackend.domain.TodoList;
 import HelpTodo.helptodoBackend.service.MemberService;
 import HelpTodo.helptodoBackend.service.TeamService;
 import HelpTodo.helptodoBackend.service.TodoListService;
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +36,7 @@ public class TodoListController {
     public String createTodoList(@Valid CreateTodoListForm createTodolistForm, BindingResult result) {
 
         if (result.hasErrors()) {
+
             return "fail";
         }
 
@@ -49,13 +54,69 @@ public class TodoListController {
         return "Create Todolist";
     }
 
+    @RequestMapping("/todolist/all")
+    public List<ResponseTodoList> allTodoList(@Valid AllTodoListForm allTodoListForm, BindingResult result) {
+
+        if (result.hasErrors()) {
+            return null;
+        }
+
+        String teamName = allTodoListForm.getTeamName();
+
+        List<ResponseTodoList> responseTodoLists = new ArrayList<>();
+
+        // TODO: 2022-11-30 이부분 최적화 생각해보기
+        List<TodoList> allByTeamName = todoListService.findAllByTeamName(teamName);
+        for(TodoList todoList : allByTeamName) {
+            ResponseTodoList responseTodolist = ResponseTodoList.createResponseTodolist(todoList.getTitle(),
+                                                                                        todoList.getMember()
+                                                                                            .getName(),
+                                                                                        todoList.getCreateDate(),
+                                                                                        todoList.getTodos(),
+                                                                                        todoList.getDoings(),
+                                                                                        todoList.getDones());
+            responseTodoLists.add(responseTodolist);
+        }
+
+        return responseTodoLists;
+    }
+
+//    @RequestMapping("/todolist/addTodo")
+//    public String addTodo(@Valid AllTodoListForm allTodoListForm, BindingResult result) {
+//
+//        if (result.hasErrors()) {
+//            return null;
+//        }
+//
+//        return "add Todo";
+//    }
+//
+//    @RequestMapping("/todolist/addDoing")
+//    public String addDoing(@Valid AllTodoListForm allTodoListForm, BindingResult result) {
+//
+//        if (result.hasErrors()) {
+//            return null;
+//        }
+//
+//        return "add Doing";
+//    }
+//
+//    @RequestMapping("/todolist/addDone")
+//    public String addDone(@Valid AllTodoListForm allTodoListForm, BindingResult result) {
+//
+//        if (result.hasErrors()) {
+//            return null;
+//        }
+//
+//        return "add Done";
+//    }
 
     // TODO: 2022-11-27
     @RequestMapping("/todolist/addTDD/{type}")
     public String addTodo(@Valid AddTDDForm addTDDForm, @PathVariable String type, BindingResult result) {
 
         if (result.hasErrors()) {
-            return "fail";
+            return "hasErrors";
         }
 
         Long todoListId = addTDDForm.getTodoListId();
@@ -65,19 +126,28 @@ public class TodoListController {
 
         Member member = memberService.findOne(memberId);
 
-        if (type == "todo"){
+        System.out.println("todoListId : "+ todoListId);
+        System.out.println("memberId : "+ memberId);
+        System.out.println("content : "+ content);
+        System.out.println("importance : " + importance);
+        System.out.println("type : " + type.toString());
+        System.out.println(type.toString()=="todo");
+        System.out.println(type.equals("todo"));
+
+
+        if (type.equals("todo")){
             Todo newTodo = Todo.createTodo(content, importance, member);
             todoListService.createTDDEntity(todoListId, newTodo);
 
             return "createTodoEntity";
 
-        } else if (type == "doing") {
+        } else if (type.equals("doing")) {
             Doing newDoing = Doing.createDoing(content, importance, member);
             todoListService.createTDDEntity(todoListId, newDoing);
 
             return "createDoingEntity";
 
-        } else if (type == "done") {
+        } else if (type.equals("done")) {
             Done newDone = Done.createDone(content, importance, member);
             todoListService.createTDDEntity(todoListId, newDone);
 

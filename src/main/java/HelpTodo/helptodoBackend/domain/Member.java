@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -34,8 +35,8 @@ public class Member {
 //    @Embedded
 //    private LoginIdPw loginIdPw;
 
-    @OneToOne(mappedBy = "member")
-    private TodoList todolist;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<TodoList> todolist = new ArrayList<>();
 
 //    memberTeam 매핑
     @OneToMany(mappedBy = "member", cascade= CascadeType.ALL)
