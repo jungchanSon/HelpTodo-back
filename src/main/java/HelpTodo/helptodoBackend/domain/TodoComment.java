@@ -35,17 +35,19 @@ public class TodoComment {
     @CreatedDate
     private LocalDateTime createDate;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name="todo_id")
+//    private Todo todo;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name="doing_id")
+//    private Doing doing;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name="done_id")
+//    private Done done;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="todo_id")
-    private Todo todo;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="doing_id")
-    private Doing doing;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="done_id")
-    private Done done;
+    private Tdd tdd;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id")

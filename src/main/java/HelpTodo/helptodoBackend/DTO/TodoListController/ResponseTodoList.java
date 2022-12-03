@@ -1,8 +1,7 @@
 package HelpTodo.helptodoBackend.DTO.TodoListController;
 
-import HelpTodo.helptodoBackend.domain.Doing;
-import HelpTodo.helptodoBackend.domain.Done;
-import HelpTodo.helptodoBackend.domain.Todo;
+import HelpTodo.helptodoBackend.domain.Tdd;
+import HelpTodo.helptodoBackend.domain.TddType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +24,7 @@ public class ResponseTodoList {
                                                           String title,
                                                           String creator,
                                                           LocalDateTime createDate,
-                                                          @Nullable List<Todo> todos,
-                                                          @Nullable List<Doing> doings,
-                                                          @Nullable List<Done> dones){
+                                                          @Nullable List<Tdd> tdds){
 
         ResponseTodoList responseTodoList = new ResponseTodoList();
 
@@ -36,32 +33,60 @@ public class ResponseTodoList {
         responseTodoList.setCreator(creator);
         responseTodoList.setCreateDate(createDate);
 
-        if(todos != null){
-            for(Todo todo : todos){
-                ResponseTdd responseTodo = ResponseTdd.createResponseTdd(todo.getContent(),
-                                                                         todo.getCreateDate());
+        for(Tdd t : tdds){
+            TddType type = t.getTddtype();
+
+            if(type == TddType.TODO){
+                ResponseTdd responseTodo = ResponseTdd.createResponseTdd(t.getId(),
+                                                                         t.getContent(),
+                                                                         t.getCreateDate());
 
                 responseTodoList.resTodos.add(responseTodo);
+            } else if(type == TddType.DOING){
+                ResponseTdd responseDoing = ResponseTdd.createResponseTdd(t.getId(),
+                                                                         t.getContent(),
+                                                                         t.getCreateDate());
+
+                responseTodoList.resDoings.add(responseDoing);
+            } else if(type == TddType.DONE){
+                ResponseTdd responseDone = ResponseTdd.createResponseTdd(t.getId(),
+                                                                         t.getContent(),
+                                                                         t.getCreateDate());
+
+                responseTodoList.resDones.add(responseDone);
             }
+
         }
 
-        if(doings != null){
-            for(Doing doing : doings){
-                ResponseTdd responseTodo = ResponseTdd.createResponseTdd(doing.getContent(),
-                                                                         doing.getCreateDate());
+//        if(todos != null){
+//            for(Todo todo : todos){
+//        ResponseTdd responseTodo = ResponseTdd.createResponseTdd(todo.getId(),
+//                                                                 todo.getContent(),
+//                                                                 todo.getCreateDate());
+//
+//        responseTodoList.resTodos.add(responseTodo);
+//            }
+//        }
 
-                responseTodoList.resDoings.add(responseTodo);
-            }
-        }
-
-        if(dones != null){
-            for(Done done : dones){
-                ResponseTdd responseTodo = ResponseTdd.createResponseTdd(done.getContent(),
-                                                                         done.getCreateDate());
-
-                responseTodoList.resDones.add(responseTodo);
-            }
-        }
+//        if(doings != null){
+//            for(Doing doing : doings){
+//                ResponseTdd responseTodo = ResponseTdd.createResponseTdd(doing.getId(),
+//                                                                         doing.getContent(),
+//                                                                         doing.getCreateDate());
+//
+//                responseTodoList.resDoings.add(responseTodo);
+//            }
+//        }
+//
+//        if(dones != null){
+//            for(Done done : dones){
+//                ResponseTdd responseTodo = ResponseTdd.createResponseTdd(done.getId(),
+//                                                                         done.getContent(),
+//                                                                         done.getCreateDate());
+//
+//                responseTodoList.resDones.add(responseTodo);
+//            }
+//        }
 
         return responseTodoList;
     }

@@ -4,11 +4,10 @@ import HelpTodo.helptodoBackend.DTO.TodoListController.ResponseTodoList;
 import HelpTodo.helptodoBackend.Form.TodoListForm.AddTDDForm;
 import HelpTodo.helptodoBackend.Form.TodoListForm.AllTodoListForm;
 import HelpTodo.helptodoBackend.Form.TodoListForm.CreateTodoListForm;
-import HelpTodo.helptodoBackend.domain.Doing;
-import HelpTodo.helptodoBackend.domain.Done;
 import HelpTodo.helptodoBackend.domain.Member;
+import HelpTodo.helptodoBackend.domain.Tdd;
+import HelpTodo.helptodoBackend.domain.TddType;
 import HelpTodo.helptodoBackend.domain.Team;
-import HelpTodo.helptodoBackend.domain.Todo;
 import HelpTodo.helptodoBackend.domain.TodoList;
 import HelpTodo.helptodoBackend.service.MemberService;
 import HelpTodo.helptodoBackend.service.TeamService;
@@ -68,15 +67,13 @@ public class TodoListController {
 
         // TODO: 2022-11-30 이부분 최적화 생각해보기
         List<TodoList> allByTeamName = todoListService.findAllByTeamName(teamName);
+
         for(TodoList todoList : allByTeamName) {
             ResponseTodoList responseTodolist = ResponseTodoList.createResponseTodolist(todoList.getId(),
                                                                                         todoList.getTitle(),
-                                                                                        todoList.getMember()
-                                                                                            .getName(),
+                                                                                        todoList.getMember().getName(),
                                                                                         todoList.getCreateDate(),
-                                                                                        todoList.getTodos(),
-                                                                                        todoList.getDoings(),
-                                                                                        todoList.getDones());
+                                                                                        todoList.getTdds());
             responseTodoLists.add(responseTodolist);
         }
 
@@ -138,19 +135,19 @@ public class TodoListController {
 
 
         if (type.equals("todo")){
-            Todo newTodo = Todo.createTodo(content, importance, member);
+            Tdd newTodo = Tdd.createTdd(TddType.TODO, content, importance, member);
             todoListService.createTDDEntity(todoListId, newTodo);
 
             return "createTodoEntity";
 
         } else if (type.equals("doing")) {
-            Doing newDoing = Doing.createDoing(content, importance, member);
+            Tdd newDoing = Tdd.createTdd(TddType.DOING, content, importance, member);
             todoListService.createTDDEntity(todoListId, newDoing);
 
             return "createDoingEntity";
 
         } else if (type.equals("done")) {
-            Done newDone = Done.createDone(content, importance, member);
+            Tdd newDone = Tdd.createTdd(TddType.DONE, content, importance, member);
             todoListService.createTDDEntity(todoListId, newDone);
 
             return "createDoneEntity";

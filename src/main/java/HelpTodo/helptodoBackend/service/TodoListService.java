@@ -1,8 +1,6 @@
 package HelpTodo.helptodoBackend.service;
 
-import HelpTodo.helptodoBackend.domain.Doing;
-import HelpTodo.helptodoBackend.domain.Done;
-import HelpTodo.helptodoBackend.domain.Todo;
+import HelpTodo.helptodoBackend.domain.Tdd;
 import HelpTodo.helptodoBackend.domain.TodoList;
 import HelpTodo.helptodoBackend.repository.TodoListRepository;
 import java.util.List;
@@ -29,23 +27,31 @@ public class TodoListService {
         return allTeam;
     }
 
-    public void createTDDEntity(Long todoListId, Object TDDEntity){
+//    public void createTDDEntity(Long todoListId, Object TDDEntity){
+//
+//        TodoList findTodolist = todoListRepository.findOneById(todoListId);
+//
+//        if (TDDEntity.getClass() == Todo.class) {
+//            findTodolist.addTodos((Todo) TDDEntity);
+//            todoListRepository.save(findTodolist);
+//
+//        } else if(TDDEntity.getClass() == Doing.class){
+//            findTodolist.addDoing((Doing)TDDEntity);
+//            todoListRepository.save(findTodolist);
+//
+//        } else if(TDDEntity.getClass() == Done.class){
+//            findTodolist.addDone((Done)TDDEntity);
+//            todoListRepository.save(findTodolist);
+//
+//        }
+//    }
+
+    public void createTDDEntity(Long todoListId, Tdd TDDEntity){
 
         TodoList findTodolist = todoListRepository.findOneById(todoListId);
+        findTodolist.addTdd(TDDEntity);
 
-        if (TDDEntity.getClass() == Todo.class) {
-            findTodolist.addTodos((Todo) TDDEntity);
-            todoListRepository.save(findTodolist);
+        todoListRepository.save(findTodolist);
 
-        } else if(TDDEntity.getClass() == Doing.class){
-            findTodolist.addDoing((Doing)TDDEntity);
-            todoListRepository.save(findTodolist);
-
-        } else if(TDDEntity.getClass() == Done.class){
-            findTodolist.addDone((Done)TDDEntity);
-            todoListRepository.save(findTodolist);
-
-        }
     }
-
 }

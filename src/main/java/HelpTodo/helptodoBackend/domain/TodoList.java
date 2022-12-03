@@ -33,14 +33,17 @@ public class TodoList {
     private Member member;
 
 
-    @OneToMany(mappedBy = "todolist" , fetch = FetchType.LAZY)
-    private List<Todo> todos = new ArrayList<>();
+//    @OneToMany(mappedBy = "todolist" , fetch = FetchType.LAZY)
+//    private List<Todo> todos = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "todolist", fetch = FetchType.LAZY)
+//    private List<Doing> doings = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "todolist", fetch = FetchType.LAZY)
+//    private List<Done> dones = new ArrayList<>();
 
     @OneToMany(mappedBy = "todolist", fetch = FetchType.LAZY)
-    private List<Doing> doings = new ArrayList<>();
-
-    @OneToMany(mappedBy = "todolist", fetch = FetchType.LAZY)
-    private List<Done> dones = new ArrayList<>();
+    private List<Tdd> tdds = new ArrayList<>();
 
     // TODO: 2022-11-27 테스트 코드 에러 고치고, private으로
     public void setTeam(Team team) {
@@ -55,19 +58,23 @@ public class TodoList {
 
     // TODO: 2022-11-27 요부분 다시 생각해보기
     // public / private 고민해보기
-    public void addTodos(Todo todo) {
-        this.todos.add(todo);
-        todo.setTodolist(this);
-    }
-
-    public void addDoing(Doing doing) {
-        this.doings.add(doing);
-        doing.setTodolist(this);
-    }
-
-    public void addDone(Done done) {
-        this.dones.add(done);
-        done.setTodolist(this);
+//    public void addTodos(Todo todo) {
+//        this.todos.add(todo);
+//        todo.setTodolist(this);
+//    }
+//
+//    public void addDoing(Doing doing) {
+//        this.doings.add(doing);
+//        doing.setTodolist(this);
+//    }
+//
+//    public void addDone(Done done) {
+//        this.dones.add(done);
+//        done.setTodolist(this);
+//    }
+    public void addTdd(Tdd tdd){
+        this.tdds.add(tdd);
+        tdd.setTodolist(this);
     }
 
     public static TodoList createTodolist(
@@ -79,8 +86,6 @@ public class TodoList {
         todoList.setTitle(title);
         todoList.setTeam(team);
         todoList.setMember(member);
-
-
 
         return todoList;
     }

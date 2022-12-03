@@ -43,14 +43,17 @@ public class Member {
     private List<JoinTeam> joinTeam = new ArrayList<>();
 
 //    todo, doing, done 매핑
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Todo> todos = new ArrayList<>();
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+//    private List<Todo> todos = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+//    private List<Doing> doings = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+//    private List<Done> dones = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Doing> doings = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Done> dones = new ArrayList<>();
+    private List<Tdd> tdds = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<TodoComment> todoComments = new ArrayList<>();
