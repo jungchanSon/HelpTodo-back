@@ -13,6 +13,7 @@ import HelpTodo.helptodoBackend.domain.TodoList;
 import HelpTodo.helptodoBackend.service.MemberService;
 import HelpTodo.helptodoBackend.service.TeamService;
 import HelpTodo.helptodoBackend.service.TodoListService;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
@@ -68,7 +69,8 @@ public class TodoListController {
         // TODO: 2022-11-30 이부분 최적화 생각해보기
         List<TodoList> allByTeamName = todoListService.findAllByTeamName(teamName);
         for(TodoList todoList : allByTeamName) {
-            ResponseTodoList responseTodolist = ResponseTodoList.createResponseTodolist(todoList.getTitle(),
+            ResponseTodoList responseTodolist = ResponseTodoList.createResponseTodolist(todoList.getId(),
+                                                                                        todoList.getTitle(),
                                                                                         todoList.getMember()
                                                                                             .getName(),
                                                                                         todoList.getCreateDate(),

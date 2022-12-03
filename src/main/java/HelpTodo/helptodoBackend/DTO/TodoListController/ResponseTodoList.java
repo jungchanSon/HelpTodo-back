@@ -12,7 +12,8 @@ import org.springframework.lang.Nullable;
 
 @Getter @Setter
 public class ResponseTodoList {
-    String title;
+    private Long id;
+    private String title;
     private String creator;
     private LocalDateTime createDate;
 
@@ -20,7 +21,8 @@ public class ResponseTodoList {
     private List<ResponseTdd> resDoings = new ArrayList<>();
     private List<ResponseTdd> resDones = new ArrayList<>();
 
-    public static ResponseTodoList createResponseTodolist(String title,
+    public static ResponseTodoList createResponseTodolist(Long id,
+                                                          String title,
                                                           String creator,
                                                           LocalDateTime createDate,
                                                           @Nullable List<Todo> todos,
@@ -29,6 +31,7 @@ public class ResponseTodoList {
 
         ResponseTodoList responseTodoList = new ResponseTodoList();
 
+        responseTodoList.setId(id);
         responseTodoList.setTitle(title);
         responseTodoList.setCreator(creator);
         responseTodoList.setCreateDate(createDate);
