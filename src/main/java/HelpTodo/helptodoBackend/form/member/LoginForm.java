@@ -1,4 +1,4 @@
-package HelpTodo.helptodoBackend.form.member;
+package HelpTodo.helptodoBackend.Form.Member;
 
 import lombok.Getter;
 import lombok.Setter;

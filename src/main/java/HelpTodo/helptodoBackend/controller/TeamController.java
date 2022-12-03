@@ -56,12 +56,12 @@ public class TeamController {
     }
 
     @RequestMapping("/team/join")
-    public String joinTeam(@Valid JoinTeamForm joinTeamForm, BindingResult result){
+    public List<FindTeam> joinTeam(@Valid JoinTeamForm joinTeamForm, BindingResult result){
         System.out.println(joinTeamForm.getUserId());
         System.out.println(joinTeamForm.getTeamName());
         System.out.println(joinTeamForm.getTeamPassword());
         if (result.hasErrors()) {
-            return "fail";
+            return null;
         }
 
         if(joinTeamForm.getTeamPassword() != null){
@@ -74,7 +74,8 @@ public class TeamController {
         }
 
 
-        return "succ";
+        // 팀에 가입 -> 자신이 속하지 않은 팀 리스트 반환 -> 프론트 갱신
+        return findOtherTeamList(joinTeamForm.getUserId());
     }
 
     @GetMapping(value = "/team/findTeamList" )

@@ -1,11 +1,10 @@
 package HelpTodo.helptodoBackend.controller;
 
-import HelpTodo.helptodoBackend.form.member.LoginForm;
-import HelpTodo.helptodoBackend.form.member.SignupForm;
+import HelpTodo.helptodoBackend.Form.Member.LoginForm;
+import HelpTodo.helptodoBackend.Form.Member.SignupForm;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.service.MemberService;
 import javax.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -43,6 +42,7 @@ public class MemberController {
         memberService.signup(member);
         return "succ";
     }
+
     @RequestMapping("/members/login")
     public String login(@Valid LoginForm form, BindingResult result){
         if (result.hasErrors()) {

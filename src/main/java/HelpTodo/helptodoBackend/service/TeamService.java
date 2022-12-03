@@ -97,7 +97,6 @@ public class TeamService {
     }
 
     public Team findTeamsByName(String name){
-
         List<Team> findTeams = teamRepository.findByTeamName(name);
         Team team = findTeams.get(0);
 

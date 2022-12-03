@@ -34,19 +34,18 @@ public class TodoListService {
         TodoList findTodolist = todoListRepository.findOneById(todoListId);
 
         if (TDDEntity.getClass() == Todo.class) {
-            findTodolist.getTodos().add((Todo)TDDEntity);
+            findTodolist.addTodos((Todo) TDDEntity);
             todoListRepository.save(findTodolist);
 
         } else if(TDDEntity.getClass() == Doing.class){
-            findTodolist.getDoings().add((Doing) TDDEntity);
+            findTodolist.addDoing((Doing)TDDEntity);
             todoListRepository.save(findTodolist);
 
         } else if(TDDEntity.getClass() == Done.class){
-            findTodolist.getDones().add((Done) TDDEntity);
+            findTodolist.addDone((Done)TDDEntity);
             todoListRepository.save(findTodolist);
 
         }
-
-
     }
+
 }

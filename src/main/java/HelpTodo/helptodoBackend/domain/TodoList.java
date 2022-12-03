@@ -28,7 +28,7 @@ public class TodoList {
     @JoinColumn(name = "team_name")
     private Team team;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId")
     private Member member;
 
@@ -50,7 +50,7 @@ public class TodoList {
 
     private void setMember(Member member) {
         this.member = member;
-        member.setTodolist(this);
+        member.getTodolist().add(this);
     }
 
     // TODO: 2022-11-27 요부분 다시 생각해보기
