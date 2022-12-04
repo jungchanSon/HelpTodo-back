@@ -9,6 +9,7 @@ import HelpTodo.helptodoBackend.service.TeamService;
 import com.fasterxml.jackson.core.JsonParser;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
@@ -99,7 +100,7 @@ public class TeamController {
     @GetMapping(value = "/team/findOtherTeamList" )
     public List<FindTeam> findOtherTeamList(@RequestParam(name="userId") String userId){
 
-        List<Team> allTeams = teamService.findOtherTeams(userId);
+        HashSet<Team> allTeams = teamService.findOtherTeams(userId);
         List<FindTeam> resultTeams = new ArrayList<>();
         for(Team t : allTeams){
             FindTeam findTeam = FindTeam.responseFindTeam(t.getName(),

@@ -6,6 +6,7 @@ import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.repository.MemberRepository;
 import HelpTodo.helptodoBackend.repository.TeamRepository;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -88,12 +89,13 @@ public class TeamService {
         return teams;
     }
 
-    public List<Team> findOtherTeams(String memberId){
+    public HashSet<Team> findOtherTeams(String memberId){
 
         List<Team> teams = new ArrayList<>();
 
         List<Team> teamWithoutUser = teamRepository.findTeamWithoutUser(memberId);
-        return teamWithoutUser;
+        HashSet<Team> result = new HashSet<>(teamWithoutUser);
+        return result;
     }
 
     public Team findTeamsByName(String name){
