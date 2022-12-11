@@ -1,5 +1,7 @@
 package HelpTodo.helptodoBackend.repository;
 
+import HelpTodo.helptodoBackend.domain.Tdd;
+import HelpTodo.helptodoBackend.domain.TddType;
 import HelpTodo.helptodoBackend.domain.TodoList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -30,5 +32,26 @@ public class TodoListRepository {
         TodoList todoList = em.find(TodoList.class, todolistId);
 
         return todoList;
+    }
+
+    public void deleteTdd(Long tddId) {
+        Tdd tdd = em.find(Tdd.class, tddId);
+
+        em.remove(tdd);
+
+    }
+
+    public void deleteTodoList(Long todoListId) {
+        TodoList todoList = em.find(TodoList.class, todoListId);
+
+        em.remove(todoList);
+    }
+
+    public void changeTddType(Long tddId, TddType tddtype){
+        Tdd tdd = em.find(Tdd.class, tddId);
+
+        tdd.setTddtype(tddtype);
+
+        em.persist(tdd);
     }
 }

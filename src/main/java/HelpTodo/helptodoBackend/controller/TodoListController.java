@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -164,5 +165,23 @@ public class TodoListController {
 //    public String addDone(@Valid AddDoneForm addDoneForm, BindingResult result) {
 //
 //    }
+    @RequestMapping("/todolist/delete")
+    public String deleteTodoList(@RequestParam(name="todoListId") Long todoListId) {
+        todoListService.deleteTodoList(todoListId);
+        return "delete todolist";
+    }
 
+    @RequestMapping("/todolist/tdd/delete")
+    public String deleteTdd(@RequestParam(name="tddId") Long tddId) {
+        todoListService.deleteTdd(tddId);
+        System.out.println(tddId);
+        return "delete tdd";
+    }
+
+    @RequestMapping("/todolist/change/tddType")
+    public String changeTddType(@RequestParam(name="tddId") Long tddId, @RequestParam(name="tddType") TddType type){
+        todoListService.changeTddType(tddId, type);
+
+        return "change tddType";
+    }
 }

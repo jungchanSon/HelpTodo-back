@@ -1,6 +1,7 @@
 package HelpTodo.helptodoBackend.service;
 
 import HelpTodo.helptodoBackend.domain.Tdd;
+import HelpTodo.helptodoBackend.domain.TddType;
 import HelpTodo.helptodoBackend.domain.TodoList;
 import HelpTodo.helptodoBackend.repository.TodoListRepository;
 import java.util.List;
@@ -53,5 +54,19 @@ public class TodoListService {
 
         todoListRepository.save(findTodolist);
 
+    }
+
+    public void deleteTdd(Long tddId) {
+
+        todoListRepository.deleteTdd(tddId);
+    }
+
+    public void deleteTodoList(Long todoListId) {
+
+        todoListRepository.deleteTodoList(todoListId);
+    }
+
+    public void changeTddType(Long tddId, TddType tddType){
+        todoListRepository.changeTddType(tddId, tddType);
     }
 }

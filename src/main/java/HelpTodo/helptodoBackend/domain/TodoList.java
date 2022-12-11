@@ -24,11 +24,11 @@ public class TodoList {
 
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "team_name")
     private Team team;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "memberId")
     private Member member;
 
@@ -42,7 +42,7 @@ public class TodoList {
 //    @OneToMany(mappedBy = "todolist", fetch = FetchType.LAZY)
 //    private List<Done> dones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "todolist", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "todolist", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Tdd> tdds = new ArrayList<>();
 
     // TODO: 2022-11-27 테스트 코드 에러 고치고, private으로
