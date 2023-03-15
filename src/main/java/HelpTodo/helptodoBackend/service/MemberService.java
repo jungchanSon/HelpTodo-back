@@ -54,6 +54,7 @@ public class MemberService {
         if(findMember == null){
             throw new IllegalStateException("아이디 존재 하지 않음");
         }
+
         //pw 불합격
         if (!findMember.getLoginPw().equals(member.getLoginPw())) {
             throw new IllegalStateException("비번 틀림");

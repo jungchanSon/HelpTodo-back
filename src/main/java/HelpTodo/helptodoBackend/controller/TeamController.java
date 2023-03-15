@@ -3,24 +3,16 @@ package HelpTodo.helptodoBackend.controller;
 import HelpTodo.helptodoBackend.DTO.teamContoller.FindTeam;
 import HelpTodo.helptodoBackend.Form.team.JoinTeamForm;
 import HelpTodo.helptodoBackend.domain.Team;
-import HelpTodo.helptodoBackend.form.team.CreateTeamForm;
-import HelpTodo.helptodoBackend.service.MemberService;
+import HelpTodo.helptodoBackend.Form.team.CreateTeamForm;
 import HelpTodo.helptodoBackend.service.TeamService;
-import com.fasterxml.jackson.core.JsonParser;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.parser.JSONParser;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamController {
 
     private final TeamService teamService;
-    private final MemberService memberService;
 
     //생성 후 -> 생성된 팀에 멤버 가입 시키기
     @RequestMapping("/team/create")
@@ -49,7 +40,7 @@ public class TeamController {
         team.setPassword(teamPassword);
         team.setCreator(memberId);
 
-        String teamId = teamService.createTeam(memberId, team);
+        teamService.createTeam(memberId, team);
 
 //        joinTeamService.join(createTeamForm.getMemberId(), teamId);
 
@@ -79,7 +70,7 @@ public class TeamController {
         return findOtherTeamList(joinTeamForm.getUserId());
     }
 
-    @GetMapping(value = "/team/findTeamList" )
+    @RequestMapping(value = "/team/findTeamList")
     public List<FindTeam> findTeamList(){
 
         List<Team> allTeams = teamService.findAllTeams();
@@ -97,7 +88,7 @@ public class TeamController {
         return null;
     }
 
-    @GetMapping(value = "/team/findOtherTeamList" )
+    @RequestMapping(value = "/team/findOtherTeamList" )
     public List<FindTeam> findOtherTeamList(@RequestParam(name="userId") String userId){
 
         HashSet<Team> allTeams = teamService.findOtherTeams(userId);
@@ -112,7 +103,7 @@ public class TeamController {
         return resultTeams;
     }
 
-    @GetMapping(value = "/team/findMyTeam" )
+    @RequestMapping(value = "/team/findMyTeam" )
     public List<FindTeam> findMyTeams(@RequestParam(name="userId") String userId){
 
         List<Team> myTeams = teamService.findMyTeams(userId);
