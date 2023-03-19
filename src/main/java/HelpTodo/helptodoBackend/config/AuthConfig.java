@@ -19,7 +19,7 @@ public class AuthConfig {
     private final MemberService memberService;
 
     @Value("${jwt.secretKey}")
-    private final String secretKey;
+    private String secretKey;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -28,9 +28,9 @@ public class AuthConfig {
             .csrf().disable()
             .cors()
             .and()
-            .authorizeRequests()
-            .requestMatchers().permitAll()
-            .requestMatchers().authenticated()
+            .authorizeHttpRequests()
+            .antMatchers("/members/signup", "/members/login").permitAll()
+            .anyRequest().authenticated()
             .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
