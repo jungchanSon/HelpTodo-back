@@ -11,6 +11,7 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,10 +26,10 @@ public class TeamController {
 
     //생성 후 -> 생성된 팀에 멤버 가입 시키기
     @RequestMapping("/team/create")
-    public String createTeam(@Valid CreateTeamForm createTeamForm, BindingResult result) {
+    public ResponseEntity createTeam(@Valid CreateTeamForm createTeamForm, BindingResult result) {
 
         if (result.hasErrors()) {
-            return "fail";
+            return ResponseEntity.badRequest().body("create team Fail");
         }
 
         String teamName = createTeamForm.getTeamName();
@@ -44,11 +45,11 @@ public class TeamController {
 
 //        joinTeamService.join(createTeamForm.getMemberId(), teamId);
 
-        return "succ";
+        return ResponseEntity.ok().body("create team OK");
     }
 
     @RequestMapping("/team/join")
-    public List<FindTeam> joinTeam(@Valid JoinTeamForm joinTeamForm, BindingResult result){
+    public ResponseEntity joinTeam(@Valid JoinTeamForm joinTeamForm, BindingResult result){
         System.out.println(joinTeamForm.getUserId());
         System.out.println(joinTeamForm.getTeamName());
         System.out.println(joinTeamForm.getTeamPassword());
@@ -67,11 +68,11 @@ public class TeamController {
 
 
         // 팀에 가입 -> 자신이 속하지 않은 팀 리스트 반환 -> 프론트 갱신
-        return findOtherTeamList(joinTeamForm.getUserId());
+        return ResponseEntity.ok().body(findOtherTeamList(joinTeamForm.getUserId()));
     }
 
     @RequestMapping(value = "/team/findTeamList")
-    public List<FindTeam> findTeamList(){
+    public ResponseEntity findTeamList(){
 
         List<Team> allTeams = teamService.findAllTeams();
         List<FindTeam> list = new ArrayList<>();
@@ -83,13 +84,14 @@ public class TeamController {
 
                 list.add(findTeam);
             }
-            return list;
+            return ResponseEntity.ok().body(list);
+
         }
         return null;
     }
 
     @RequestMapping(value = "/team/findOtherTeamList" )
-    public List<FindTeam> findOtherTeamList(@RequestParam(name="userId") String userId){
+    public ResponseEntity findOtherTeamList(@RequestParam(name="userId") String userId){
 
         HashSet<Team> allTeams = teamService.findOtherTeams(userId);
         List<FindTeam> resultTeams = new ArrayList<>();
@@ -100,11 +102,12 @@ public class TeamController {
 
             resultTeams.add(findTeam);
         }
-        return resultTeams;
+        return ResponseEntity.ok().body(resultTeams);
+
     }
 
     @RequestMapping(value = "/team/findMyTeam" )
-    public List<FindTeam> findMyTeams(@RequestParam(name="userId") String userId){
+    public ResponseEntity findMyTeams(@RequestParam(name="userId") String userId){
 
         List<Team> myTeams = teamService.findMyTeams(userId);
 
@@ -116,7 +119,8 @@ public class TeamController {
 
             resultTeams.add(findTeam);
         }
-        return resultTeams;
+        return ResponseEntity.ok().body(resultTeams);
+
     }
 
 }

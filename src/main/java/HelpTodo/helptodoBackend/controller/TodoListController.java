@@ -17,6 +17,7 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,11 +34,11 @@ public class TodoListController {
     private final TeamService teamService;
 
     @RequestMapping("/todolist/create")
-    public String createTodoList(@Valid CreateTodoListForm createTodolistForm, BindingResult result) {
+    public ResponseEntity createTodoList(@Valid CreateTodoListForm createTodolistForm, BindingResult result) {
 
         if (result.hasErrors()) {
 
-            return "fail";
+            return ResponseEntity.ok().body("create todoList Fail");
         }
 
         String title = createTodolistForm.getTitle();
@@ -51,11 +52,11 @@ public class TodoListController {
 
         todoListService.createTodoList(todolist);
 
-        return "Create Todolist";
+        return ResponseEntity.ok().body("create todolist ok");
     }
 
     @RequestMapping("/todolist/all")
-    public List<ResponseTodoList> allTodoList(@Valid AllTodoListForm allTodoListForm, BindingResult result) {
+    public ResponseEntity allTodoList(@Valid AllTodoListForm allTodoListForm, BindingResult result) {
 
         if (result.hasErrors()) {
             return null;
@@ -77,7 +78,7 @@ public class TodoListController {
             responseTodoLists.add(responseTodolist);
         }
 
-        return responseTodoLists;
+        return ResponseEntity.ok().body(responseTodoLists);
     }
 
 //    @RequestMapping("/todolist/addTodo")
@@ -112,10 +113,10 @@ public class TodoListController {
 
     // TODO: 2022-11-27
     @RequestMapping("/todolist/addTDD/{type}")
-    public String addTodo(@Valid AddTDDForm addTDDForm, @PathVariable String type, BindingResult result) {
+    public ResponseEntity addTodo(@Valid AddTDDForm addTDDForm, @PathVariable String type, BindingResult result) {
 
         if (result.hasErrors()) {
-            return "hasErrors";
+            return null;
         }
 
         Long todoListId = addTDDForm.getTodoListId();
@@ -138,21 +139,23 @@ public class TodoListController {
             Tdd newTodo = Tdd.createTdd(TddType.TODO, content, importance, member);
             todoListService.createTDDEntity(todoListId, newTodo);
 
-            return "createTodoEntity";
+            return ResponseEntity.ok().body("create todo card OK");
+
 
         } else if (type.equals("doing")) {
             Tdd newDoing = Tdd.createTdd(TddType.DOING, content, importance, member);
             todoListService.createTDDEntity(todoListId, newDoing);
 
-            return "createDoingEntity";
+            return ResponseEntity.ok().body("create Doing card Ok");
 
         } else if (type.equals("done")) {
             Tdd newDone = Tdd.createTdd(TddType.DONE, content, importance, member);
             todoListService.createTDDEntity(todoListId, newDone);
 
-            return "createDoneEntity";
+            return ResponseEntity.ok().body("create Done card Ok");
         }
-        return "fail";
+
+        return ResponseEntity.badRequest().body("add card fail");
     }
 //
 //    @RequestMapping("/todolist/adddoing")
@@ -165,22 +168,24 @@ public class TodoListController {
 //
 //    }
     @RequestMapping("/todolist/delete")
-    public String deleteTodoList(@RequestParam(name="todoListId") Long todoListId) {
+    public ResponseEntity deleteTodoList(@RequestParam(name="todoListId") Long todoListId) {
         todoListService.deleteTodoList(todoListId);
-        return "delete todolist";
+
+        return ResponseEntity.ok().body("delete todoList ok");
     }
 
     @RequestMapping("/todolist/tdd/delete")
-    public String deleteTdd(@RequestParam(name="tddId") Long tddId) {
+    public ResponseEntity deleteTdd(@RequestParam(name="tddId") Long tddId) {
         todoListService.deleteTdd(tddId);
-        System.out.println(tddId);
-        return "delete tdd";
+
+        return ResponseEntity.ok().body("delete todo card Ok");
+
     }
 
     @RequestMapping("/todolist/change/tddType")
-    public String changeTddType(@RequestParam(name="tddId") Long tddId, @RequestParam(name="tddType") TddType type){
+    public ResponseEntity changeTddType(@RequestParam(name="tddId") Long tddId, @RequestParam(name="tddType") TddType type){
         todoListService.changeTddType(tddId, type);
 
-        return "change tddType";
+        return ResponseEntity.ok().body("change todocard Ok");
     }
 }
