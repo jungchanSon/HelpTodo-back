@@ -4,6 +4,7 @@ import HelpTodo.helptodoBackend.Form.Member.LoginForm;
 import HelpTodo.helptodoBackend.Form.Member.SignupForm;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.service.MemberService;
+import java.util.Date;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,23 +24,17 @@ public class MemberController {
     //회원 가입 컨트롤러
     @RequestMapping(value = "/members/signup")
     public ResponseEntity signup(@Valid SignupForm signupForm, BindingResult result){
-//        Environment env = context.getEnvironment();
-        
+
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body("signup Fail");
         }
 
-        Member member = new Member();
+        Member member = new Member().builder()
+                                    .name(signupForm.getName())
+                                    .loginId(signupForm.getId())
+                                    .loginPw(signupForm.getPw())
+                                    .build();
 
-        member.setName(signupForm.getName());
-
-        member.setLoginId(signupForm.getId());
-        member.setLoginPw(signupForm.getPw());
-
-        log.info("loginIdPw.getId() = " + member.getLoginId());
-        log.info("loginIdPw.getPw() = " + member.getLoginPw());
-        log.info("member.getName() = " + member.getName());
-        
         memberService.signup(member);
         return ResponseEntity.ok().body("signup OK");
     }
@@ -50,10 +45,11 @@ public class MemberController {
             return null;
         }
 
-        Member member = new Member();
-
-        member.setLoginId(form.getId());
-        member.setLoginPw(form.getPw());
+        Member member = new Member()
+            .builder()
+            .loginId(form.getId())
+            .loginPw(form.getPw())
+            .build();
 
         String userName = memberService.login(member);
 

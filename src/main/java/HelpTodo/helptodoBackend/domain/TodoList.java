@@ -4,15 +4,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "todolist")
-@Getter @Setter
+@Getter
 @EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor
+@Builder
 public class TodoList {
 
     @Id @GeneratedValue
@@ -56,6 +59,9 @@ public class TodoList {
         member.getTodolist().add(this);
     }
 
+    private void setTitle(String title){
+        this.title = title;
+    }
     // TODO: 2022-11-27 요부분 다시 생각해보기
     // public / private 고민해보기
 //    public void addTodos(Todo todo) {
@@ -77,16 +83,16 @@ public class TodoList {
         tdd.setTodolist(this);
     }
 
-    public static TodoList createTodolist(
-        String title,
-        Team team,
-        Member member
-    ) {
-        TodoList todoList = new TodoList();
-        todoList.setTitle(title);
-        todoList.setTeam(team);
-        todoList.setMember(member);
-
-        return todoList;
-    }
+//    public static TodoList createTodolist(
+//        String title,
+//        Team team,
+//        Member member
+//    ) {
+//        TodoList todoList = new TodoList();
+//        todoList.setTitle(title);
+//        todoList.setTeam(team);
+//        todoList.setMember(member);
+//
+//        return todoList;
+//    }
 }

@@ -11,15 +11,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name="members")
-@Getter @Setter // TODO: 2022-11-27 Setter 지우기.
+@Getter
 @EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor
+@Builder
 public class Member {
 
     @Id
@@ -58,7 +64,7 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<TodoComment> todoComments = new ArrayList<>();
 
-//
+    //
 //    private List<JoinTeam> addJoinTeam(JoinTeam joinTeam){
 //        this.joinTeams.add
 //    }

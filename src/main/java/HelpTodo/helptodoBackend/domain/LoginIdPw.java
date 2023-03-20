@@ -1,19 +1,18 @@
 package HelpTodo.helptodoBackend.domain;
 
 import javax.persistence.Embeddable;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
 @Getter
-
+@NoArgsConstructor
+@Builder
 public class LoginIdPw {
 
     private String Id;
     private String Pw;
-
-    protected LoginIdPw(){
-
-    }
 
     public LoginIdPw(String Id, String Pw){
         this.Id = Id;

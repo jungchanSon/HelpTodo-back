@@ -4,8 +4,6 @@ import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.repository.MemberRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +14,6 @@ public class MemberService {
 
 //    레포지토리 생성자 주입 방식 적용
     private final MemberRepository memberRepository;
-
 
     @Transactional
     public String signup(Member member){

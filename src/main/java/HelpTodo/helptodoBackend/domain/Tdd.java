@@ -15,7 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,8 +25,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "Tdd")
 @Getter
-@Setter
 @EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor
+@Builder
 public class Tdd {
 
     @Id
@@ -66,5 +69,8 @@ public class Tdd {
         tdd.setMember(member);
 
         return tdd;
+    }
+    public void setTodolist(TodoList todolist){
+        this.todolist = todolist;
     }
 }
