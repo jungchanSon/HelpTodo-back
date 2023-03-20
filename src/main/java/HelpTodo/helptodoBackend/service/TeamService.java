@@ -1,5 +1,6 @@
 package HelpTodo.helptodoBackend.service;
 
+import HelpTodo.helptodoBackend.Form.team.JoinTeamForm;
 import HelpTodo.helptodoBackend.domain.JoinTeam;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.domain.Team;
@@ -34,18 +35,17 @@ public class TeamService {
     }
 
     @Transactional
-    public Long join(String memberId, String teamName, String teamPassword){
-        Member member = memberRepository.findOne(memberId);
-        Team team = teamRepository.findOne(teamName);
+    public Long join(JoinTeamForm joinTeamForm){
+        String teamPassword = joinTeamForm.getTeamPassword();
+        Member member = memberRepository.findOne(joinTeamForm.getUserId());
+        Team team = teamRepository.findOne(joinTeamForm.getTeamName());
 
-        System.out.println("join ser : ");
-        System.out.println(team.getPassword());
-        System.out.println(teamPassword);
-        validateTeamPassword(team, teamPassword);
-
+        if (!teamPassword.isEmpty()){ //팀 비번 없음
+            validateTeamPassword(team, teamPassword);
+        }
         JoinTeam joinTeam = JoinTeam.createJoinTeam(member, team);
-
         teamRepository.save(team);
+
         return joinTeam.getId();
     }
 
@@ -55,17 +55,6 @@ public class TeamService {
         if(!collectPassword.equals(teamPassword)){
             throw new IllegalStateException(collectPassword + "  " + teamPassword);
         }
-    }
-
-    @Transactional
-    public Long join(String memberId, String teamName){
-        Member member = memberRepository.findOne(memberId);
-        Team team = teamRepository.findOne(teamName);
-
-        JoinTeam joinTeam = JoinTeam.createJoinTeam(member, team);
-
-        teamRepository.save(team);
-        return joinTeam.getId();
     }
     public List<Team> findAllTeams(){
 

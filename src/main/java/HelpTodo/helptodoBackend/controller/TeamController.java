@@ -32,40 +32,26 @@ public class TeamController {
             return ResponseEntity.badRequest().body("create team Fail");
         }
 
-        String teamName = createTeamForm.getTeamName();
-        String memberId = createTeamForm.getMemberId();
-        String teamPassword = createTeamForm.getTeamPassword();
+        String creatorId = createTeamForm.getMemberId();
 
-        Team team = new Team();
-        team.setName(teamName);
-        team.setPassword(teamPassword);
-        team.setCreator(memberId);
+        Team team = new Team().builder()
+            .name(createTeamForm.getTeamName())
+            .password(createTeamForm.getMemberId())
+            .creator(createTeamForm.getTeamPassword())
+            .build();
 
-        teamService.createTeam(memberId, team);
-
-//        joinTeamService.join(createTeamForm.getMemberId(), teamId);
+        teamService.createTeam(creatorId, team);
 
         return ResponseEntity.ok().body("create team OK");
     }
 
     @RequestMapping("/team/join")
     public ResponseEntity joinTeam(@Valid JoinTeamForm joinTeamForm, BindingResult result){
-        System.out.println(joinTeamForm.getUserId());
-        System.out.println(joinTeamForm.getTeamName());
-        System.out.println(joinTeamForm.getTeamPassword());
         if (result.hasErrors()) {
             return null;
         }
 
-        if(joinTeamForm.getTeamPassword() != null){
-            System.out.println("join 3 param");
-            teamService.join(joinTeamForm.getUserId(),
-                             joinTeamForm.getTeamName(),
-                             joinTeamForm.getTeamPassword());
-        } else{
-            Long join = teamService.join(joinTeamForm.getUserId(), joinTeamForm.getTeamName());
-        }
-
+        teamService.join(joinTeamForm);
 
         // 팀에 가입 -> 자신이 속하지 않은 팀 리스트 반환 -> 프론트 갱신
         return ResponseEntity.ok().body(findOtherTeamList(joinTeamForm.getUserId()));
