@@ -37,6 +37,7 @@ public class MemberController {
 //        Member member = Member.createMember(signupForm.getName(),
 //                            signupForm.getId(),
 //                            signupForm.getPw());
+
         memberService.signup(member);
         return ResponseEntity.ok().body("signup OK");
     }
@@ -44,7 +45,7 @@ public class MemberController {
     @RequestMapping("/members/login")
     public ResponseEntity login(@Valid LoginForm form, BindingResult result){
         if (result.hasErrors()) {
-            return null;
+            return ResponseEntity.badRequest().body("login Fail");
         }
 
         Member member = new Member()
