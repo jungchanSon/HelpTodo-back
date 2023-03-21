@@ -1,9 +1,11 @@
 package HelpTodo.helptodoBackend.service;
 
 import HelpTodo.helptodoBackend.Form.team.JoinTeamForm;
-import HelpTodo.helptodoBackend.domain.JoinTeam;
+import HelpTodo.helptodoBackend.domain.MemberTeam;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.domain.Team;
+import HelpTodo.helptodoBackend.exception.ErrorCode_Team;
+import HelpTodo.helptodoBackend.exception.TeamException;
 import HelpTodo.helptodoBackend.repository.MemberRepository;
 import HelpTodo.helptodoBackend.repository.TeamRepository;
 import java.util.ArrayList;
@@ -21,18 +23,43 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
     @Transactional
-    public String createTeam(String memberId, Team team) {
-        validateDuplicateTeam(team);
-        validateEmpty(team);
-        //TODO : 회원이 로그인한 상태인지 검증 추가하기
+    public String createTeam(Team team, String memberId) {
+//        validateDuplicateTeam(team);
+//        validateEmpty(team);
+        validateCreateTeam(team);
 
         Member member = memberRepository.findOne(memberId);
-        JoinTeam joinTeam = JoinTeam.createJoinTeam(member, team);
+        MemberTeam.createMemberTeam(member, team);
 
         teamRepository.save(team);
 
         return team.getName();
     }
+
+    private void validateCreateTeam(Team team) {
+        // validate empty name
+        if(team.getName() == null || team.getName() == ""){
+            throw new TeamException(ErrorCode_Team.CREATE_TEAM_NAME_NULL, "팀 이름이 비어 있음");
+        }
+
+        // validate empty creatorid
+        if(team.getCreatorId() == null || team.getCreatorId() == ""){
+            throw new TeamException(ErrorCode_Team.CREATE_TEAM_CREATOR_ID_NULL, "방장 이름이 공백");
+        }
+
+        // validate Duplicate (중복 검사)
+        List<Team> findTeams = teamRepository.findByTeamName(team.getName());
+        if (!findTeams.isEmpty()) {
+            throw new TeamException(ErrorCode_Team.CREATE_TEAM_DUPLICATED, "중복된 팀");
+        }
+
+        // 올바르지 않은 CreateId
+        List<Member> creators = memberRepository.findByMemberId(team.getCreatorId());
+        if (creators.isEmpty()){
+            throw new TeamException(ErrorCode_Team.CREATE_TEAM_CREATOR_NULL, "존재 하지 않는 회원이 방 개설");
+        }
+    }
+
 
     @Transactional
     public Long join(JoinTeamForm joinTeamForm){
@@ -40,50 +67,50 @@ public class TeamService {
         Member member = memberRepository.findOne(joinTeamForm.getUserId());
         Team team = teamRepository.findOne(joinTeamForm.getTeamName());
 
-        if (!teamPassword.isEmpty()){ //팀 비번 없음
+        if (!teamPassword.isEmpty()){ //팀 비번 있으면 확인.
             validateTeamPassword(team, teamPassword);
         }
-        JoinTeam joinTeam = JoinTeam.createJoinTeam(member, team);
+
+        MemberTeam memberTeam = MemberTeam.createMemberTeam(member, team);
         teamRepository.save(team);
 
-        return joinTeam.getId();
+        return memberTeam.getId();
     }
 
     private void validateTeamPassword(Team team, String teamPassword) {
         String collectPassword = team.getPassword();
 
         if(!collectPassword.equals(teamPassword)){
-            throw new IllegalStateException(collectPassword + "  " + teamPassword);
+            throw new TeamException(ErrorCode_Team.VALIDATE_TEAM_PASSWORD_WRONG, "");
         }
     }
     public List<Team> findAllTeams(){
 
-        List<Team> findAllTeams = teamRepository.findAll();
+        List<Team> allTeams = teamRepository.findAll();
 
-        return findAllTeams;
+        return allTeams;
     }
 
     public List<Team> findMyTeams(String memberId){
 
-        List<Team> teams = new ArrayList<>();
-
         Member member = memberRepository.findOne(memberId);
-        List<JoinTeam> myJoinTeam = member.getJoinTeam();
+        List<MemberTeam> myMemberTeam = member.getMemberTeam();
 
-        for(JoinTeam jt : myJoinTeam){
-            Team myteam = jt.getTeam();
+        List<Team> myTeamList = new ArrayList<>();
+        for(MemberTeam jt : myMemberTeam){
+            Team myTeam = jt.getTeam();
 
-            teams.add(myteam);
+            myTeamList.add(myTeam);
         }
-        return teams;
+
+        return myTeamList;
     }
 
     public HashSet<Team> findOtherTeams(String memberId){
 
-        List<Team> teams = new ArrayList<>();
-
         List<Team> teamWithoutUser = teamRepository.findTeamWithoutUser(memberId);
         HashSet<Team> result = new HashSet<>(teamWithoutUser);
+
         return result;
     }
 
@@ -100,19 +127,4 @@ public class TeamService {
 
         return findTeam;
     }
-
-    private void validateEmpty(Team team) {
-        if(team.getName() == null){
-            throw new IllegalStateException("팀 이름 공백");
-        }
-    }
-
-    private void validateDuplicateTeam(Team team) {
-        List<Team> findTeams = teamRepository.findByTeamName(team.getName());
-        if (!findTeams.isEmpty()) {
-            throw new IllegalStateException("");
-        }
-    }
-
-
 }

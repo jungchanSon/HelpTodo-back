@@ -34,9 +34,6 @@ public class MemberController {
                                     .loginId(signupForm.getId())
                                     .loginPw(signupForm.getPw())
                                     .build();
-//        Member member = Member.createMember(signupForm.getName(),
-//                            signupForm.getId(),
-//                            signupForm.getPw());
 
         memberService.signup(member);
         return ResponseEntity.ok().body("signup OK");
@@ -49,10 +46,10 @@ public class MemberController {
         }
 
         Member member = new Member()
-            .builder()
-            .loginId(form.getId())
-            .loginPw(form.getPw())
-            .build();
+                            .builder()
+                            .loginId(form.getId())
+                            .loginPw(form.getPw())
+                            .build();
 
         String token = memberService.login(member);
 

@@ -8,7 +8,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionManager {
 
     @ExceptionHandler(MemberException.class)
-    public ResponseEntity<?> memberExceptionHandler(MemberException e){
+    public ResponseEntity<?> memberExceptionHandler(MemberException e) {
+
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus())
+            .body(e.getErrorCode().name() + " " + e.getMessage());
+    }
+
+    @ExceptionHandler(TeamException.class)
+    public ResponseEntity<?> teamExceptionHandler(TeamException e) {
 
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
             .body(e.getErrorCode().name() + " " + e.getMessage());
