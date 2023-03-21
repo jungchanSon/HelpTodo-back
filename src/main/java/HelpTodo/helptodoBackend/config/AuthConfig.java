@@ -29,7 +29,7 @@ public class AuthConfig {
             .cors()
             .and()
             .authorizeHttpRequests()
-            .antMatchers("/members/signup", "/members/login").permitAll()
+            .antMatchers("/members/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .sessionManagement()

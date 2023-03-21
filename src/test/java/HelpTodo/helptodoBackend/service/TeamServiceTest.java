@@ -2,7 +2,7 @@ package HelpTodo.helptodoBackend.service;
 
 import static org.junit.Assert.*;
 
-import HelpTodo.helptodoBackend.domain.JoinTeam;
+import HelpTodo.helptodoBackend.domain.MemberTeam;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.repository.TeamRepository;
@@ -39,13 +39,13 @@ public class TeamServiceTest {
         String createTeamName = teamService.createTeam(member.getLoginId(), team);
         Team findTeam = teamRepository.findOne(createTeamName);
 
-        List<JoinTeam> joinTeams = findTeam.getJoinTeams();
+        List<MemberTeam> memberTeams = findTeam.getMemberTeams();
 
-        for(JoinTeam joinTeam : joinTeams )
-            System.out.println(joinTeam.getMember());
+        for(MemberTeam memberTeam : memberTeams)
+            System.out.println(memberTeam.getMember());
 
-        JoinTeam joinTeam = joinTeams.get(0);
-        Member member1 = joinTeam.getMember();
+        MemberTeam memberTeam = memberTeams.get(0);
+        Member member1 = memberTeam.getMember();
         assertEquals(member, member1);
         assertEquals(team, teamRepository.findOne(createTeamName));
     }
@@ -69,17 +69,17 @@ public class TeamServiceTest {
         Team findOne = teamRepository.findOne(team.getName());
         Team findOne2 = teamRepository.findOne(team2.getName());
 
-        List<JoinTeam> joinTeams1 = findOne.getJoinTeams();
-        List<JoinTeam> joinTeams2 = findOne2.getJoinTeams();
+        List<MemberTeam> memberTeams1 = findOne.getMemberTeams();
+        List<MemberTeam> memberTeams2 = findOne2.getMemberTeams();
 
-        for(JoinTeam joinTeam : joinTeams1) {
-            System.out.println(joinTeam.getMember().getName());
+        for(MemberTeam memberTeam : memberTeams1) {
+            System.out.println(memberTeam.getMember().getName());
         }
-        for(JoinTeam joinTeam : joinTeams2) {
-            System.out.println(joinTeam.getMember().getName());
+        for(MemberTeam memberTeam : memberTeams2) {
+            System.out.println(memberTeam.getMember().getName());
         }
-        assertEquals(2, joinTeams1.size());
-        assertEquals(1, joinTeams2.size());
+        assertEquals(2, memberTeams1.size());
+        assertEquals(1, memberTeams2.size());
     }
     @Test
     public void 내팀조회(){

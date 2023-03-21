@@ -32,8 +32,8 @@ public class TeamRepository {
 
     public List<Team> findTeamWithoutUser(String userId){
 //        return em.createQuery("select jt.team from JoinTeam jt where jt.team.name <> (select jt.team.name from JoinTeam jt where jt.member.loginId = :userId)", Team.class)
-        return em.createQuery("select jt.team from JoinTeam jt where jt.team "
-                                  + "not in (select t.team from JoinTeam t where t.member.loginId = :userId)", Team.class)
+        return em.createQuery("select jt.team from MemberTeam jt where jt.team "
+                                  + "not in (select t.team from MemberTeam t where t.member.loginId = :userId)", Team.class)
             .setParameter("userId", userId)
             .getResultList();
 //        (select team.* from team, member_team  where member_team.member_id <> :userId, Team.class)

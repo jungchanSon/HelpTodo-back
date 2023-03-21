@@ -1,6 +1,6 @@
 package HelpTodo.helptodoBackend.controller;
 
-import HelpTodo.helptodoBackend.DTO.teamContoller.FindTeam;
+import HelpTodo.helptodoBackend.DTO.teamContoller.ResponseTeam;
 import HelpTodo.helptodoBackend.Form.team.JoinTeamForm;
 import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.Form.team.CreateTeamForm;
@@ -11,6 +11,7 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,98 +26,88 @@ public class TeamController {
 
     //생성 후 -> 생성된 팀에 멤버 가입 시키기
     @RequestMapping("/team/create")
-    public String createTeam(@Valid CreateTeamForm createTeamForm, BindingResult result) {
+    public ResponseEntity createTeam(@Valid CreateTeamForm createTeamForm, BindingResult result) {
 
         if (result.hasErrors()) {
-            return "fail";
+            return ResponseEntity.badRequest().body("create team Fail");
         }
 
-        String teamName = createTeamForm.getTeamName();
-        String memberId = createTeamForm.getMemberId();
-        String teamPassword = createTeamForm.getTeamPassword();
+        String creatorId = createTeamForm.getMemberId();
 
-        Team team = new Team();
-        team.setName(teamName);
-        team.setPassword(teamPassword);
-        team.setCreator(memberId);
+        Team team = new Team().builder()
+                                .name(createTeamForm.getTeamName())
+                                .password(createTeamForm.getTeamPassword())
+                                .creatorId(createTeamForm.getMemberId())
+                                .build();
 
-        teamService.createTeam(memberId, team);
+        teamService.createTeam(team, creatorId);
 
-//        joinTeamService.join(createTeamForm.getMemberId(), teamId);
-
-        return "succ";
+        return ResponseEntity.ok().body("create team OK");
     }
 
     @RequestMapping("/team/join")
-    public List<FindTeam> joinTeam(@Valid JoinTeamForm joinTeamForm, BindingResult result){
-        System.out.println(joinTeamForm.getUserId());
-        System.out.println(joinTeamForm.getTeamName());
-        System.out.println(joinTeamForm.getTeamPassword());
+    public ResponseEntity joinTeam(@Valid JoinTeamForm joinTeamForm, BindingResult result){
         if (result.hasErrors()) {
-            return null;
+            return ResponseEntity.badRequest().body("Fail join team");
         }
 
-        if(joinTeamForm.getTeamPassword() != null){
-            System.out.println("join 3 param");
-            teamService.join(joinTeamForm.getUserId(),
-                             joinTeamForm.getTeamName(),
-                             joinTeamForm.getTeamPassword());
-        } else{
-            Long join = teamService.join(joinTeamForm.getUserId(), joinTeamForm.getTeamName());
-        }
+        teamService.join(joinTeamForm);
 
-
-        // 팀에 가입 -> 자신이 속하지 않은 팀 리스트 반환 -> 프론트 갱신
-        return findOtherTeamList(joinTeamForm.getUserId());
+        // TODO:팀에 가입 -> 자신이 속하지 않은 팀 리스트 반환 -> 프론트 갱신
+        return ResponseEntity.ok().body(findOtherTeamList(joinTeamForm.getUserId()));
     }
 
     @RequestMapping(value = "/team/findTeamList")
-    public List<FindTeam> findTeamList(){
+    public ResponseEntity findTeamList(){
 
         List<Team> allTeams = teamService.findAllTeams();
-        List<FindTeam> list = new ArrayList<>();
+        List<ResponseTeam> responseAllTeamList = new ArrayList<>();
 
-        if (!allTeams.isEmpty()) {
-            for(Team t : allTeams) {
+        for(Team t : allTeams) {
 
-                FindTeam findTeam = FindTeam.responseFindTeam(t.getName(), t.getCreator(), t.getCreateDate());
-
-                list.add(findTeam);
-            }
-            return list;
+            ResponseTeam responseTeam = ResponseTeam.builder()
+                                                    .name(t.getName())
+                                                    .creatorId(t.getCreatorId())
+                                                    .createDate(t.getCreateDate())
+                                                    .build();
+            responseAllTeamList.add(responseTeam);
         }
-        return null;
+
+        return ResponseEntity.ok().body(responseAllTeamList);
     }
 
     @RequestMapping(value = "/team/findOtherTeamList" )
-    public List<FindTeam> findOtherTeamList(@RequestParam(name="userId") String userId){
+    public ResponseEntity findOtherTeamList(@RequestParam(name="userId") String userId){
 
         HashSet<Team> allTeams = teamService.findOtherTeams(userId);
-        List<FindTeam> resultTeams = new ArrayList<>();
-        for(Team t : allTeams){
-            FindTeam findTeam = FindTeam.responseFindTeam(t.getName(),
-                                                          t.getCreator(),
-                                                          t.getCreateDate());
+        List<ResponseTeam> responseOtherTeams = new ArrayList<>();
 
-            resultTeams.add(findTeam);
+        for(Team t : allTeams){
+            ResponseTeam responseTeam = ResponseTeam.builder()
+                                                    .name(t.getName())
+                                                    .creatorId(t.getCreatorId())
+                                                    .createDate(t.getCreateDate())
+                                                    .build();
+
+            responseOtherTeams.add(responseTeam);
         }
-        return resultTeams;
+        return ResponseEntity.ok().body(responseOtherTeams);
     }
 
     @RequestMapping(value = "/team/findMyTeam" )
-    public List<FindTeam> findMyTeams(@RequestParam(name="userId") String userId){
+    public ResponseEntity findMyTeams(@RequestParam(name="userId") String userId){
 
         List<Team> myTeams = teamService.findMyTeams(userId);
+        List<ResponseTeam> responseMyTeams = new ArrayList<>();
 
-        List<FindTeam> resultTeams = new ArrayList<>();
         for(Team t : myTeams){
-            FindTeam findTeam = FindTeam.responseFindTeam(t.getName(),
-                                                          t.getCreator(),
-                                                          t.getCreateDate());
-
-            resultTeams.add(findTeam);
+            ResponseTeam responseTeam = ResponseTeam.builder()
+                                                    .name(t.getName())
+                                                    .creatorId(t.getCreatorId())
+                                                    .createDate(t.getCreateDate())
+                                                    .build();
+            responseMyTeams.add(responseTeam);
         }
-        return resultTeams;
+        return ResponseEntity.ok().body(responseMyTeams);
     }
-
 }

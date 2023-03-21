@@ -7,19 +7,22 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name="members")
-@Getter @Setter // TODO: 2022-11-27 Setter 지우기.
+@Getter
 @EntityListeners(AuditingEntityListener.class)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Member {
 
     @Id
@@ -36,11 +39,13 @@ public class Member {
 //    private LoginIdPw loginIdPw;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<TodoList> todolist = new ArrayList<>();
 
 //    memberTeam 매핑
     @OneToMany(mappedBy = "member", cascade= CascadeType.ALL)
-    private List<JoinTeam> joinTeam = new ArrayList<>();
+    @Builder.Default
+    private List<MemberTeam> memberTeam = new ArrayList<>();
 
 //    todo, doing, done 매핑
 //    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
@@ -53,22 +58,25 @@ public class Member {
 //    private List<Done> dones = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Tdd> tdds = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<TodoComment> todoComments = new ArrayList<>();
 
-//
+    //
 //    private List<JoinTeam> addJoinTeam(JoinTeam joinTeam){
 //        this.joinTeams.add
 //    }
 //
-//    private void createMember(String name, String id, String pw, JoinTeam joinTeam) {
-//        Member member = new Member();
-//
-//        member.name = name;
-//        member.loginId =id;
-//        member.loginPw = pw;
-//
-//    }
+    public static Member createMember(String name, String id, String pw) {
+        Member member = new Member();
+
+        member.name = name;
+        member.loginId =id;
+        member.loginPw = pw;
+
+        return member;
+    }
 }
