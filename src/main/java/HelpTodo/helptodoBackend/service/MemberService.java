@@ -29,8 +29,7 @@ public class MemberService {
 
     @Transactional
     public String signup(Member member){
-//        validateDuplicateMember(member);
-//        validateEmpty(member);
+
         validateSignup(member);
 
         memberRepository.save(member);
@@ -39,9 +38,7 @@ public class MemberService {
     }
 
     private void validateSignup(Member member) {
-        log.info("member.id : {}", member.getLoginId());
-        log.info("member.pw : {}", member.getLoginPw());
-        log.info("member.name : {}", member.getName());
+
         if (member.getLoginId() == null || member.getLoginId() == "") {
             throw new MemberException(ErrorCode_Member.SIGNUP_MEMBER_ID_NULL, "ID가 비어있음");
         }
@@ -53,63 +50,30 @@ public class MemberService {
             throw new MemberException(ErrorCode_Member.SIGNUP_MEMBER_NAME_NULL, "NAME이 비어있음");
         }
 
-        List<Member> findMembers = memberRepository.findByName(member.getName());
+        List<Member> findMembers = memberRepository.findByMemberId(member.getLoginId());
         if (!findMembers.isEmpty()) {
             throw new MemberException(ErrorCode_Member.SIGNUP_DUPLICATED_MEMBER, "중복 회원");
         }
     }
 
-
     public String login(Member member){
 
         Member findMember = memberRepository.findOne(member.getLoginId());
-
         validateLogin(findMember, member);
-
-//        //id 잘못 입력
-//        if(findMember == null){
-//            throw new IllegalStateException("아이디 존재 하지 않음");
-//        }
-//
-//        //pw 불합격
-//        if (!findMember.getLoginPw().equals(member.getLoginPw())) {
-//            throw new IllegalStateException("비번 틀림");
-//        }
 
         return JwtUtil.createJwt(member.getLoginId(), secretKey, expiredMs);
     }
 
     private void validateLogin(Member findMember, Member savedMember) {
+        // 존재하지 않는 회원
         if(findMember == null){
             throw new MemberException(ErrorCode_Member.LOGIN_MEMBER_NULL, "존재하지 않는 회원");
-
         }
-
-        //pw 불합격
+        //패스워드 틀림
         if (!findMember.getLoginPw().equals(savedMember.getLoginPw())) {
             throw new MemberException(ErrorCode_Member.LOGIN_MEMBER_PW_WRONG, "PW 틀림");
         }
     }
-
-    //    private void validateEmpty(Member member) {
-//
-//        if (member.getLoginId() == null) {
-//            throw new IllegalStateException("id가 비어 있음");
-//        }
-//        if (member.getLoginPw() == null){
-//            throw new IllegalStateException("pw가 비어 있음");
-//        }
-//        if (member.getName() == null){
-//            throw new IllegalStateException("name이 비어 있음");
-//        }
-//    }
-//
-//    private void validateDuplicateMember(Member member) {
-//        List<Member> findMembers = memberRepository.findByName(member.getName());
-//        if (!findMembers.isEmpty()) {
-//            throw new IllegalStateException("중복 회원");
-//        }
-//    }
 
     public List<Member> findMembers(){
         return memberRepository.findAll();
@@ -118,7 +82,4 @@ public class MemberService {
     public Member findOne(String memberId){
         return memberRepository.findOne(memberId);
     }
-
-
-
 }
