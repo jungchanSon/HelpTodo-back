@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,16 +13,17 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "team")
-@Getter
-@EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor
 @Builder
+@Table(name = "team")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class Team {
 
     @Id
     @Column(name = "team_name")
     private String name;
+
     private String teamCode;
 
     private String password;
@@ -32,9 +34,11 @@ public class Team {
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<JoinTeam> joinTeams = new ArrayList<>();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<TodoList> todolists = new ArrayList<>();
 
     public void setCreator(String memberId){
@@ -58,8 +62,8 @@ public class Team {
     public static Team createTeam(String name, JoinTeam... joinTeams){
         Team team = new Team();
         team.setName(name);
-        for(JoinTeam jt : joinTeams){
-            team.addJoinTeam(jt);
+        for(JoinTeam jointTeam : joinTeams){
+            team.addJoinTeam(jointTeam);
         }
 
         return team;

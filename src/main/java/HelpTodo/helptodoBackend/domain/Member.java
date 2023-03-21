@@ -24,6 +24,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name="members")
 @Getter
 @EntityListeners(AuditingEntityListener.class)
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class Member {
@@ -42,10 +43,12 @@ public class Member {
 //    private LoginIdPw loginIdPw;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<TodoList> todolist = new ArrayList<>();
 
 //    memberTeam 매핑
     @OneToMany(mappedBy = "member", cascade= CascadeType.ALL)
+    @Builder.Default
     private List<JoinTeam> joinTeam = new ArrayList<>();
 
 //    todo, doing, done 매핑
@@ -59,9 +62,11 @@ public class Member {
 //    private List<Done> dones = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Tdd> tdds = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<TodoComment> todoComments = new ArrayList<>();
 
     //
@@ -69,12 +74,13 @@ public class Member {
 //        this.joinTeams.add
 //    }
 //
-//    private void createMember(String name, String id, String pw, JoinTeam joinTeam) {
-//        Member member = new Member();
-//
-//        member.name = name;
-//        member.loginId =id;
-//        member.loginPw = pw;
-//
-//    }
+    public static Member createMember(String name, String id, String pw) {
+        Member member = new Member();
+
+        member.name = name;
+        member.loginId =id;
+        member.loginPw = pw;
+
+        return member;
+    }
 }

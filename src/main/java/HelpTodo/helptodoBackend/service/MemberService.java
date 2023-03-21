@@ -2,8 +2,10 @@ package HelpTodo.helptodoBackend.service;
 
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.repository.MemberRepository;
+import HelpTodo.helptodoBackend.util.JwtUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
 //    레포지토리 생성자 주입 방식 적용
+    @Value("${jwt.secretKey}")
+    private String secretKey;
+    private Long expiredMs = 1000 * 60 * 60 * 10l;
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -26,9 +31,20 @@ public class MemberService {
 
 
     public String login(Member member){
-        validateLogin(member);
-        Member one = memberRepository.findOne(member.getLoginId());
-        return one.getName();
+
+        Member findMember = memberRepository.findOne(member.getLoginId());
+
+        //id 잘못 입력
+        if(findMember == null){
+            throw new IllegalStateException("아이디 존재 하지 않음");
+        }
+
+        //pw 불합격
+        if (!findMember.getLoginPw().equals(member.getLoginPw())) {
+            throw new IllegalStateException("비번 틀림");
+        }
+
+        return JwtUtil.createJwt(member.getLoginId(), secretKey, expiredMs);
     }
 
     private void validateEmpty(Member member) {
@@ -44,21 +60,9 @@ public class MemberService {
         }
     }
 
-    private void validateLogin(Member member) {
-        Member findMember = memberRepository.findOne(member.getLoginId());
-
-        //id 잘못 입력
-        if(findMember == null){
-            throw new IllegalStateException("아이디 존재 하지 않음");
-        }
-
-        //pw 불합격
-        if (!findMember.getLoginPw().equals(member.getLoginPw())) {
-            throw new IllegalStateException("비번 틀림");
-        }
 
 
-    }
+
 
     private void validateDuplicateMember(Member member) {
         List<Member> findMembers = memberRepository.findByName(member.getName());

@@ -47,9 +47,7 @@ public class TodoListController {
 
         Member findMember = memberService.findOne(userId);
         Team findTeam = teamService.findOneByName(teamName);
-
         TodoList todolist = TodoList.createTodolist(title, findTeam, findMember);
-
         todoListService.createTodoList(todolist);
 
         return ResponseEntity.ok().body("create todolist ok");

@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,8 +25,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "Tdd")
-@Getter
+@Getter @Setter
 @EntityListeners(AuditingEntityListener.class)
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class Tdd {
@@ -53,6 +55,7 @@ public class Tdd {
     private Member member;
 
     @OneToMany(mappedBy = "tdd")
+    @Builder.Default
     private List<TodoComment> todoComments = new ArrayList<>();
 
 
@@ -62,11 +65,12 @@ public class Tdd {
     }
 
     public static Tdd createTdd(TddType type, String content,  int importance, Member member){
-        Tdd tdd = new Tdd();
-        tdd.setContent(content);
-        tdd.setImportance(importance);
-        tdd.setTddtype(type);
-        tdd.setMember(member);
+        Tdd tdd = new Tdd().builder()
+            .content(content)
+            .importance(importance)
+            .tddtype(type)
+            .member(member)
+            .build();
 
         return tdd;
     }

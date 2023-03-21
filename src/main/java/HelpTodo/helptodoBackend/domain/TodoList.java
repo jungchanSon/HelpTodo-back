@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "todolist")
 @Getter
 @EntityListeners(AuditingEntityListener.class)
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class TodoList {
@@ -46,6 +48,7 @@ public class TodoList {
 //    private List<Done> dones = new ArrayList<>();
 
     @OneToMany(mappedBy = "todolist", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Tdd> tdds = new ArrayList<>();
 
     // TODO: 2022-11-27 테스트 코드 에러 고치고, private으로
@@ -83,16 +86,17 @@ public class TodoList {
         tdd.setTodolist(this);
     }
 
-//    public static TodoList createTodolist(
-//        String title,
-//        Team team,
-//        Member member
-//    ) {
-//        TodoList todoList = new TodoList();
-//        todoList.setTitle(title);
-//        todoList.setTeam(team);
-//        todoList.setMember(member);
-//
-//        return todoList;
-//    }
+    public static TodoList createTodolist(
+        String title,
+        Team team,
+        Member member
+    ) {
+        TodoList todoList = TodoList.builder()
+            .title(title)
+            .team(team)
+            .member(member)
+            .build();
+
+        return todoList;
+    }
 }

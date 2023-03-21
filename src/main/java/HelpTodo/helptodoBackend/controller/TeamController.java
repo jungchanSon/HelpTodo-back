@@ -2,6 +2,7 @@ package HelpTodo.helptodoBackend.controller;
 
 import HelpTodo.helptodoBackend.DTO.teamContoller.FindTeam;
 import HelpTodo.helptodoBackend.Form.team.JoinTeamForm;
+import HelpTodo.helptodoBackend.domain.JoinTeam;
 import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.Form.team.CreateTeamForm;
 import HelpTodo.helptodoBackend.service.TeamService;
@@ -35,10 +36,16 @@ public class TeamController {
         String creatorId = createTeamForm.getMemberId();
 
         Team team = new Team().builder()
-            .name(createTeamForm.getTeamName())
-            .password(createTeamForm.getMemberId())
-            .creator(createTeamForm.getTeamPassword())
+            .name("asdf")
+            .password("createTeamForm.getMemberId()")
+            .creator("createTeamForm.getTeamPassword()")
             .build();
+
+        log.info("team JoinTeams : {}", team.getJoinTeams());
+
+        log.info("TeamForm.teamname : {}", createTeamForm.getTeamName());
+        log.info("teamForm.memberid : {}", createTeamForm.getMemberId());
+        log.info("teamForm.teamPs : {}", createTeamForm.getTeamPassword());
 
         teamService.createTeam(creatorId, team);
 

@@ -2,6 +2,7 @@ package HelpTodo.helptodoBackend.domain;
 
 import java.time.LocalDateTime;
 import javax.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "member_team")
 @Getter
 @EntityListeners(AuditingEntityListener.class)
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class JoinTeam {
