@@ -7,7 +7,7 @@ import lombok.Setter;
 public class CreateTodoListForm {
 
     private String title;
-    private String userId;
+    private String memberId;
     private String teamName;
 
 }

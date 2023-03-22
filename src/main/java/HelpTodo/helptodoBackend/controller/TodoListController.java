@@ -41,14 +41,8 @@ public class TodoListController {
             return ResponseEntity.ok().body("create todoList Fail");
         }
 
-        String title = createTodolistForm.getTitle();
-        String userId = createTodolistForm.getUserId();
-        String teamName = createTodolistForm.getTeamName();
-
-        Member findMember = memberService.findOne(userId);
-        Team findTeam = teamService.findOneByName(teamName);
-        TodoList todolist = TodoList.createTodolist(title, findTeam, findMember);
-        todoListService.createTodoList(todolist);
+        // TODO: 2023-03-22 createTodoListFrom.toServiceDto 만들어서 보내주기..
+        todoListService.createTodoList(createTodolistForm);
 
         return ResponseEntity.ok().body("create todolist ok");
     }
@@ -60,13 +54,9 @@ public class TodoListController {
             return null;
         }
 
-        String teamName = allTodoListForm.getTeamName();
+        List<TodoList> allByTeamName = todoListService.findAllByTeamName(allTodoListForm);
 
         List<ResponseTodoList> responseTodoLists = new ArrayList<>();
-
-        // TODO: 2022-11-30 이부분 최적화 생각해보기
-        List<TodoList> allByTeamName = todoListService.findAllByTeamName(teamName);
-
         for(TodoList todoList : allByTeamName) {
             ResponseTodoList responseTodolist = ResponseTodoList.createResponseTodolist(todoList.getId(),
                                                                                         todoList.getTitle(),
@@ -113,47 +103,9 @@ public class TodoListController {
     @RequestMapping("/todolist/addTDD/{type}")
     public ResponseEntity addTodo(@Valid AddTDDForm addTDDForm, @PathVariable String type, BindingResult result) {
 
-        if (result.hasErrors()) {
-            return null;
-        }
+        todoListService.createTDDEntity(addTDDForm, type);
 
-        Long todoListId = addTDDForm.getTodoListId();
-        String memberId = addTDDForm.getMemberId();
-        String content = addTDDForm.getContent();
-        int importance = addTDDForm.getImportance();
-
-        Member member = memberService.findOne(memberId);
-
-        System.out.println("todoListId : "+ todoListId);
-        System.out.println("memberId : "+ memberId);
-        System.out.println("content : "+ content);
-        System.out.println("importance : " + importance);
-        System.out.println("type : " + type.toString());
-        System.out.println(type.toString()=="todo");
-        System.out.println(type.equals("todo"));
-
-
-        if (type.equals("todo")){
-            Tdd newTodo = Tdd.createTdd(TddType.TODO, content, importance, member);
-            todoListService.createTDDEntity(todoListId, newTodo);
-
-            return ResponseEntity.ok().body("create todo card OK");
-
-
-        } else if (type.equals("doing")) {
-            Tdd newDoing = Tdd.createTdd(TddType.DOING, content, importance, member);
-            todoListService.createTDDEntity(todoListId, newDoing);
-
-            return ResponseEntity.ok().body("create Doing card Ok");
-
-        } else if (type.equals("done")) {
-            Tdd newDone = Tdd.createTdd(TddType.DONE, content, importance, member);
-            todoListService.createTDDEntity(todoListId, newDone);
-
-            return ResponseEntity.ok().body("create Done card Ok");
-        }
-
-        return ResponseEntity.badRequest().body("add card fail");
+        return ResponseEntity.ok().body("create todo card OK");
     }
 //
 //    @RequestMapping("/todolist/adddoing")
