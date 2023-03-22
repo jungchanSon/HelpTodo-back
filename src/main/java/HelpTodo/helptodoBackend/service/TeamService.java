@@ -8,6 +8,7 @@ import HelpTodo.helptodoBackend.exception.ErrorCode_Team;
 import HelpTodo.helptodoBackend.exception.TeamException;
 import HelpTodo.helptodoBackend.repository.MemberRepository;
 import HelpTodo.helptodoBackend.repository.TeamRepository;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -126,5 +127,17 @@ public class TeamService {
         Team findTeam = teamRepository.findOne(name);
 
         return findTeam;
+    }
+
+    public List<Member> findMembers(String teamName) {
+        Team findTeam = teamRepository.findOne(teamName);
+        List<MemberTeam> memberTeams = findTeam.getMemberTeams();
+
+        List<Member> membersInTeam = new ArrayList();
+        for(MemberTeam memberTeam : memberTeams){
+            membersInTeam.add(memberTeam.getMember());
+        }
+
+        return membersInTeam;
     }
 }
