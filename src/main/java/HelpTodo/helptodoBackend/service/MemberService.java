@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
+    private final BCryptPasswordEncoder encoder;
     @Value("${jwt.secretKey}")
     private String secretKey;
 
@@ -32,10 +33,12 @@ public class MemberService {
     @Transactional
     public String signup(SignupForm requestSignUpForm){
 
+        String encodedPassword = encoder.encode(requestSignUpForm.getPw());
+
         Member member = new Member().builder()
                                     .name(requestSignUpForm.getName())
                                     .loginId(requestSignUpForm.getId())
-                                    .loginPw(requestSignUpForm.getPw())
+                                    .loginPw(encodedPassword)
                                     .build();
 
         validateSignup(member);
@@ -65,24 +68,22 @@ public class MemberService {
     }
 
     public String login(LoginForm requestLoginForm){
-        Member member = new Member().builder()
-                                    .loginId(requestLoginForm.getId())
-                                    .loginPw(requestLoginForm.getPw())
-                                    .build();
 
-        Member findMember = memberRepository.findOne(member.getLoginId());
-        validateLogin(findMember, member);
+        Member findMember = memberRepository.findOne(requestLoginForm.getId());
 
-        return JwtUtil.createJwt(member.getLoginId(), secretKey, expiredMs);
+        validateLogin(findMember, requestLoginForm.getPw());
+
+        return JwtUtil.createJwt(findMember.getLoginId(), secretKey, expiredMs);
     }
 
-    private void validateLogin(Member findMember, Member savedMember) {
+    private void validateLogin(Member findMember, String requestPassword) {
         // 존재하지 않는 회원
         if(findMember == null){
             throw new MemberException(ErrorCode_Member.LOGIN_MEMBER_NULL, "존재하지 않는 회원");
         }
-        //패스워드 틀림
-        if (!findMember.getLoginPw().equals(savedMember.getLoginPw())) {
+
+        // 패스워드 틀림
+        if(!encoder.matches(findMember.getLoginPw(), requestPassword)){
             throw new MemberException(ErrorCode_Member.LOGIN_MEMBER_PW_WRONG, "PW 틀림");
         }
     }
