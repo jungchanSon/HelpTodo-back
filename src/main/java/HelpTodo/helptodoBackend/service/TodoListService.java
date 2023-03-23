@@ -8,6 +8,8 @@ import HelpTodo.helptodoBackend.domain.Tdd;
 import HelpTodo.helptodoBackend.domain.TddType;
 import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.domain.TodoList;
+import HelpTodo.helptodoBackend.exception.ErrorCode_TodoList;
+import HelpTodo.helptodoBackend.exception.TodoListException;
 import HelpTodo.helptodoBackend.repository.TodoListRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +65,7 @@ public class TodoListService {
         }
 
         if (!isBelong) {
-            throw new IllegalStateException();
+            throw new TodoListException(ErrorCode_TodoList.MEMBER_NOT_BELONG_TEAM, "팀에 소속되지 않는 멤버");
         }
     }
 
@@ -103,7 +105,7 @@ public class TodoListService {
         } else if (type.equals("done")) {
             TDDType = TddType.DONE;
         } else {
-            throw new IllegalStateException();
+            throw new TodoListException(ErrorCode_TodoList.CREATE_TDD_ENTITY_WRONG_TYPE, "올바르지 않은 TDD타입");
         }
 
         Tdd newTDD = Tdd.builder()

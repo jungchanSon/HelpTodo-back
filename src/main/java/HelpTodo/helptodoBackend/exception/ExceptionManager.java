@@ -20,4 +20,11 @@ public class ExceptionManager {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
             .body(e.getErrorCode().name() + " " + e.getMessage());
     }
+
+    @ExceptionHandler(TodoListException.class)
+    public ResponseEntity<?> todoListExceptionHandler(TodoListException e) {
+
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus())
+            .body(e.getErrorCode().name() + " " + e.getMessage());
+    }
 }
