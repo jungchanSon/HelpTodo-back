@@ -1,5 +1,6 @@
 package HelpTodo.helptodoBackend.service;
 
+import HelpTodo.helptodoBackend.Form.Member.SignupForm;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.exception.ErrorCode_Member;
 import HelpTodo.helptodoBackend.exception.MemberException;
@@ -28,7 +29,13 @@ public class MemberService {
     private Long expiredMs = 1000 * 60 * 60 * 10l;
 
     @Transactional
-    public String signup(Member member){
+    public String signup(SignupForm requestSignUpForm){
+
+        Member member = new Member().builder()
+                                    .name(requestSignUpForm.getName())
+                                    .loginId(requestSignUpForm.getId())
+                                    .loginPw(requestSignUpForm.getPw())
+                                    .build();
 
         validateSignup(member);
 

@@ -29,13 +29,9 @@ public class MemberController {
             return ResponseEntity.badRequest().body("signup Fail");
         }
 
-        Member member = new Member().builder()
-                                    .name(signupForm.getName())
-                                    .loginId(signupForm.getId())
-                                    .loginPw(signupForm.getPw())
-                                    .build();
 
-        memberService.signup(member);
+
+        memberService.signup(signupForm);
         return ResponseEntity.ok().body("signup OK");
     }
 
