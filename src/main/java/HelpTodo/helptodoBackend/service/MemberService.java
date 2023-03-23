@@ -1,5 +1,6 @@
 package HelpTodo.helptodoBackend.service;
 
+import HelpTodo.helptodoBackend.Form.Member.LoginForm;
 import HelpTodo.helptodoBackend.Form.Member.SignupForm;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.exception.ErrorCode_Member;
@@ -63,7 +64,11 @@ public class MemberService {
         }
     }
 
-    public String login(Member member){
+    public String login(LoginForm requestLoginForm){
+        Member member = new Member().builder()
+                                    .loginId(requestLoginForm.getId())
+                                    .loginPw(requestLoginForm.getPw())
+                                    .build();
 
         Member findMember = memberRepository.findOne(member.getLoginId());
         validateLogin(findMember, member);

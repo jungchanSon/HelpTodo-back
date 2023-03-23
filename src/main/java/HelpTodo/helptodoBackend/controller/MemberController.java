@@ -29,8 +29,6 @@ public class MemberController {
             return ResponseEntity.badRequest().body("signup Fail");
         }
 
-
-
         memberService.signup(signupForm);
         return ResponseEntity.ok().body("signup OK");
     }
@@ -41,13 +39,7 @@ public class MemberController {
             return ResponseEntity.badRequest().body("login Fail");
         }
 
-        Member member = new Member()
-                            .builder()
-                            .loginId(form.getId())
-                            .loginPw(form.getPw())
-                            .build();
-
-        String token = memberService.login(member);
+        String token = memberService.login(form);
 
         return ResponseEntity.ok().body(token);
     }
