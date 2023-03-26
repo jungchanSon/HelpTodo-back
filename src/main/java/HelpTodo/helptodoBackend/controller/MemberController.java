@@ -5,6 +5,7 @@ import HelpTodo.helptodoBackend.Form.Member.SignupForm;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.service.MemberService;
 import java.util.Date;
+import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +40,8 @@ public class MemberController {
             return ResponseEntity.badRequest().body("login Fail");
         }
 
-        String token = memberService.login(form);
+        Map responseLoginResult = memberService.login(form);
 
-        return ResponseEntity.ok().body(token);
+        return ResponseEntity.ok().body(responseLoginResult);
     }
 }

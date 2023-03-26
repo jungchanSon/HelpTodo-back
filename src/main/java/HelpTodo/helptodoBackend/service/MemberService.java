@@ -7,7 +7,9 @@ import HelpTodo.helptodoBackend.exception.ErrorCode_Member;
 import HelpTodo.helptodoBackend.exception.MemberException;
 import HelpTodo.helptodoBackend.repository.MemberRepository;
 import HelpTodo.helptodoBackend.util.JwtUtil;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,13 +69,20 @@ public class MemberService {
         }
     }
 
-    public String login(LoginForm requestLoginForm){
+    public Map login(LoginForm requestLoginForm){
+
+        Map<String, String> responseLoginResult = new HashMap<>();
 
         Member findMember = memberRepository.findOne(requestLoginForm.getId());
 
         validateLogin(findMember, requestLoginForm.getPw());
+        String memberName = findMember.getName();
 
-        return JwtUtil.createJwt(findMember.getLoginId(), secretKey, expiredMs);
+        responseLoginResult.put("token", JwtUtil.createJwt(findMember.getLoginId(), secretKey, expiredMs));
+        responseLoginResult.put("memberName", memberName);
+
+
+        return responseLoginResult;
     }
 
     private void validateLogin(Member findMember, String requestPassword) {
@@ -83,7 +92,7 @@ public class MemberService {
         }
 
         // 패스워드 틀림
-        if(!encoder.matches(findMember.getLoginPw(), requestPassword)){
+        if(!encoder.matches(requestPassword, findMember.getLoginPw())){
             throw new MemberException(ErrorCode_Member.LOGIN_MEMBER_PW_WRONG, "PW 틀림");
         }
     }
@@ -91,7 +100,6 @@ public class MemberService {
     public List<Member> findMembers(){
         return memberRepository.findAll();
     }
-
     public Member findOne(String memberId){
         return memberRepository.findOne(memberId);
     }
