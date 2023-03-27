@@ -30,7 +30,8 @@ public class MemberService {
     @Value("${jwt.secretKey}")
     private String secretKey;
 
-    private Long expiredMs = 1000 * 60 * 60 * 10l;
+    @Value("${jwt.expiredMs}")
+    private Long expiredMs;
 
     @Transactional
     public String signup(SignupForm requestSignUpForm){
@@ -71,7 +72,7 @@ public class MemberService {
 
     public Map login(LoginForm requestLoginForm){
 
-        Map<String, String> responseLoginResult = new HashMap<>();
+        Map<String, Object> responseLoginResult = new HashMap<>();
 
         Member findMember = memberRepository.findOne(requestLoginForm.getId());
 
@@ -79,6 +80,7 @@ public class MemberService {
         String memberName = findMember.getName();
 
         responseLoginResult.put("token", JwtUtil.createJwt(findMember.getLoginId(), secretKey, expiredMs));
+        responseLoginResult.put("expiredMs", expiredMs);
         responseLoginResult.put("memberName", memberName);
 
 
