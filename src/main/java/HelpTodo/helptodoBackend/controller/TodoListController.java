@@ -16,10 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,13 +42,13 @@ public class TodoListController {
     }
 
     @RequestMapping("/todolist/all")
-    public ResponseEntity allTodoList(@Valid AllTodoListForm allTodoListForm, BindingResult result) {
+    public ResponseEntity allTodoList(@RequestHeader(value = "Authorization") String token, @Valid AllTodoListForm allTodoListForm, BindingResult result) {
 
         if (result.hasErrors()) {
             return null;
         }
 
-        List<TodoList> allByTeamName = todoListService.findAllByTeamName(allTodoListForm);
+        List<TodoList> allByTeamName = todoListService.findAllByTeamName(allTodoListForm, token);
 
         List<ResponseTodoList> responseTodoLists = new ArrayList<>();
         for(TodoList todoList : allByTeamName) {
@@ -98,9 +95,9 @@ public class TodoListController {
 
     // TODO: 2022-11-27
     @RequestMapping("/todolist/addTDD/{type}")
-    public ResponseEntity addTodo(@Valid AddTDDForm addTDDForm, @PathVariable String type, BindingResult result) {
+    public ResponseEntity addTodo(@RequestHeader(value = "Authorization") String token, @Valid AddTDDForm addTDDForm, @PathVariable String type, BindingResult result) {
 
-        todoListService.createTDDEntity(addTDDForm, type);
+        todoListService.createTDDEntity(addTDDForm, type, token);
 
         return ResponseEntity.ok().body("create todo card OK");
     }
@@ -114,15 +111,17 @@ public class TodoListController {
 //    public String addDone(@Valid AddDoneForm addDoneForm, BindingResult result) {
 //
 //    }
+
+    // TODO: 2023-03-29 올바른 사용자인지 체크해야하나 ?
     @RequestMapping("/todolist/delete")
-    public ResponseEntity deleteTodoList(@RequestParam(name="todoListId") Long todoListId) {
+    public ResponseEntity deleteTodoList(@RequestHeader(value = "Authorization") String token, @RequestParam(name="todoListId") Long todoListId) {
         todoListService.deleteTodoList(todoListId);
 
         return ResponseEntity.ok().body("delete todoList ok");
     }
 
     @RequestMapping("/todolist/tdd/delete")
-    public ResponseEntity deleteTdd(@RequestParam(name="tddId") Long tddId) {
+    public ResponseEntity deleteTdd(@RequestHeader(value = "Authorization") String token,@RequestParam(name="tddId") Long tddId) {
         todoListService.deleteTdd(tddId);
 
         return ResponseEntity.ok().body("delete todo card Ok");
@@ -130,7 +129,7 @@ public class TodoListController {
     }
 
     @RequestMapping("/todolist/change/tddType")
-    public ResponseEntity changeTddType(@RequestParam(name="tddId") Long tddId, @RequestParam(name="tddType") TddType type){
+    public ResponseEntity changeTddType(@RequestHeader(value = "Authorization") String token, @RequestParam(name="tddId") Long tddId, @RequestParam(name="tddType") TddType type){
         todoListService.changeTddType(tddId, type);
 
         return ResponseEntity.ok().body("change todocard Ok");

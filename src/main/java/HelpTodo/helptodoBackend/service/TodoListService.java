@@ -3,31 +3,32 @@ package HelpTodo.helptodoBackend.service;
 import HelpTodo.helptodoBackend.Form.TodoListForm.AddTDDForm;
 import HelpTodo.helptodoBackend.Form.TodoListForm.AllTodoListForm;
 import HelpTodo.helptodoBackend.Form.TodoListForm.CreateTodoListForm;
-import HelpTodo.helptodoBackend.domain.Member;
-import HelpTodo.helptodoBackend.domain.Tdd;
-import HelpTodo.helptodoBackend.domain.TddType;
-import HelpTodo.helptodoBackend.domain.Team;
-import HelpTodo.helptodoBackend.domain.TodoList;
+import HelpTodo.helptodoBackend.domain.*;
 import HelpTodo.helptodoBackend.exception.ErrorCode_TodoList;
 import HelpTodo.helptodoBackend.exception.TodoListException;
 import HelpTodo.helptodoBackend.repository.TodoListRepository;
-import java.util.List;
+import HelpTodo.helptodoBackend.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class TodoListService {
 
+    @Value("${jwt.secretKey}")
+    private String secretKey;
+
     private final TodoListRepository todoListRepository;
     private final MemberService memberService;
     private final TeamService teamService;
 
     @Transactional
-    public Long createTodoList(CreateTodoListForm createTodoListForm){
+    public Long createTodoList(CreateTodoListForm createTodoListForm) {
 
         String listTitle = createTodoListForm.getTitle();
         String memberId = createTodoListForm.getMemberId();
@@ -42,9 +43,9 @@ public class TodoListService {
         return todoList.getId();
     }
 
-    public List<TodoList> findAllByTeamName(AllTodoListForm allTodoListForm){
+    public List<TodoList> findAllByTeamName(AllTodoListForm allTodoListForm, String token) {
         String teamName = allTodoListForm.getTeamName();
-        String memberId = allTodoListForm.getMemberId();
+        String memberId = JwtUtil.getMemberId(token, secretKey);
 
         validateMeberBelongTeam(memberId, teamName);
 
@@ -88,10 +89,10 @@ public class TodoListService {
 //        }
 //    }
 
-    public void createTDDEntity(AddTDDForm addTDDForm, String type){
+    public void createTDDEntity(AddTDDForm addTDDForm, String type, String token) {
 
         Long todoListId = addTDDForm.getTodoListId();
-        String memberId = addTDDForm.getMemberId();
+        String memberId = JwtUtil.getMemberId(token, secretKey);
         String content = addTDDForm.getContent();
         int importance = addTDDForm.getImportance();
 
@@ -109,11 +110,11 @@ public class TodoListService {
         }
 
         Tdd newTDD = Tdd.builder()
-            .tddtype(TDDType)
-            .content(content)
-            .importance(importance)
-            .member(member)
-            .build();
+                .tddtype(TDDType)
+                .content(content)
+                .importance(importance)
+                .member(member)
+                .build();
 
         TodoList findTodolist = todoListRepository.findOneById(todoListId);
         findTodolist.addTdd(newTDD);
@@ -131,7 +132,7 @@ public class TodoListService {
         todoListRepository.deleteTodoList(todoListId);
     }
 
-    public void changeTddType(Long tddId, TddType tddType){
+    public void changeTddType(Long tddId, TddType tddType) {
         todoListRepository.changeTddType(tddId, tddType);
     }
 }
