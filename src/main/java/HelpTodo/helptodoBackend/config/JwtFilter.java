@@ -4,7 +4,6 @@ import HelpTodo.helptodoBackend.service.MemberService;
 import HelpTodo.helptodoBackend.util.JwtUtil;
 import java.io.IOException;
 import java.util.List;
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -53,12 +52,12 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         //userName 토큰 꺼냄
-        String userName = JwtUtil.getUserName(token, secretKey);
-        log.info("userName: {}", userName);
+        String memberId = JwtUtil.getMemberId(token, secretKey);
+        log.info("memberID: {}", memberId);
 
         //권한 부여
         UsernamePasswordAuthenticationToken authenticationToken =
-            new UsernamePasswordAuthenticationToken(userName,
+            new UsernamePasswordAuthenticationToken(memberId,
                                                     null,
                                                     List.of(new SimpleGrantedAuthority("USER")));
 

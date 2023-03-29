@@ -7,9 +7,9 @@ import java.util.Date;
 
 public class JwtUtil {
 
-    public static String getUserName(String token, String secretKey) {
+    public static String getMemberId(String token, String secretKey) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-            .getBody().get("memberName", String.class);
+            .getBody().get("memberId", String.class);
     }
 
     public static boolean isExpired(String token, String secretKey){
@@ -17,10 +17,10 @@ public class JwtUtil {
             .getBody().getExpiration().before(new Date());
     }
 
-    public static String createJwt(String userName, String secretKey, Long expiredMs){
+    public static String createJwt(String memberId, String secretKey, Long expiredMs){
         Claims claims = Jwts.claims();
 
-        claims.put("memberName", userName);
+        claims.put("memberId", memberId);
 
         return Jwts.builder()
             .setClaims(claims)

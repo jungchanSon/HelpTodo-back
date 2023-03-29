@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CreateTeamForm {
-    String memberId;
     String teamName;
     String teamPassword;
 }

@@ -1,5 +1,7 @@
 package HelpTodo.helptodoBackend.service;
 
+import HelpTodo.helptodoBackend.Form.TokenForm;
+import HelpTodo.helptodoBackend.Form.team.CreateTeamForm;
 import HelpTodo.helptodoBackend.Form.team.JoinTeamForm;
 import HelpTodo.helptodoBackend.domain.MemberTeam;
 import HelpTodo.helptodoBackend.domain.Member;
@@ -8,28 +10,45 @@ import HelpTodo.helptodoBackend.exception.ErrorCode_Team;
 import HelpTodo.helptodoBackend.exception.TeamException;
 import HelpTodo.helptodoBackend.repository.MemberRepository;
 import HelpTodo.helptodoBackend.repository.TeamRepository;
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import HelpTodo.helptodoBackend.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class TeamService {
+
+    @Value("${jwt.secretKey}")
+    private String secretKey;
 
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
     @Transactional
-    public String createTeam(Team team, String memberId) {
+    public String createTeam(CreateTeamForm createTeamForm, String token) {
 //        validateDuplicateTeam(team);
 //        validateEmpty(team);
+
+        String creatorId = JwtUtil.getMemberId(token, secretKey);
+
+        Team team = new Team().builder()
+                .name(createTeamForm.getTeamName())
+                .password(createTeamForm.getTeamPassword())
+                .creatorId(creatorId)
+                .build();
+
         validateCreateTeam(team);
 
-        Member member = memberRepository.findOne(memberId);
+        Member member = memberRepository.findOne(creatorId);
         MemberTeam.createMemberTeam(member, team);
 
         teamRepository.save(team);
@@ -63,9 +82,11 @@ public class TeamService {
 
 
     @Transactional
-    public Long join(JoinTeamForm joinTeamForm){
+    public Long join(JoinTeamForm joinTeamForm, String token){
         String teamPassword = joinTeamForm.getTeamPassword();
-        Member member = memberRepository.findOne(joinTeamForm.getUserId());
+        String memberId = JwtUtil.getMemberId(token, secretKey);
+
+        Member member = memberRepository.findOne(memberId);
         Team team = teamRepository.findOne(joinTeamForm.getTeamName());
 
         if (!teamPassword.isEmpty()){ //팀 비번 있으면 확인.
@@ -92,8 +113,9 @@ public class TeamService {
         return allTeams;
     }
 
-    public List<Team> findMyTeams(String memberId){
-
+    public List<Team> findMyTeams(String token){
+        log.info(token.split(" ")[1]);
+        String memberId = JwtUtil.getMemberId(token.split(" ")[1], secretKey);
         Member member = memberRepository.findOne(memberId);
         List<MemberTeam> myMemberTeam = member.getMemberTeam();
 
@@ -107,8 +129,11 @@ public class TeamService {
         return myTeamList;
     }
 
-    public HashSet<Team> findOtherTeams(String memberId){
+    public HashSet<Team> findOtherTeams(String token){
 
+
+        String memberId = JwtUtil.getMemberId(token.split(" ")[1], secretKey);
+        log.info("findOtherTeam Token : {} ", token.split(" ")[1]);
         List<Team> teamWithoutUser = teamRepository.findTeamWithoutUser(memberId);
         HashSet<Team> result = new HashSet<>(teamWithoutUser);
 
