@@ -10,5 +10,4 @@ public class AddTDDForm {
     Long TodoListId;
 
     int importance;
-    String memberId;
 }

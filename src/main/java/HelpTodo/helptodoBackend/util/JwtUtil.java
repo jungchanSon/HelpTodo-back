@@ -6,7 +6,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 
 public class JwtUtil {
+    public static String getTokenValue(String token) {
 
+        String[] splitToken = token.split(" ");
+        return splitToken[1];
+    }
     public static String getMemberId(String token, String secretKey) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
             .getBody().get("memberId", String.class);

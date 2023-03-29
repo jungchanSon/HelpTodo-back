@@ -9,6 +9,7 @@ import HelpTodo.helptodoBackend.exception.TodoListException;
 import HelpTodo.helptodoBackend.repository.TodoListRepository;
 import HelpTodo.helptodoBackend.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class TodoListService {
 
     @Value("${jwt.secretKey}")
@@ -45,7 +47,8 @@ public class TodoListService {
 
     public List<TodoList> findAllByTeamName(AllTodoListForm allTodoListForm, String token) {
         String teamName = allTodoListForm.getTeamName();
-        String memberId = JwtUtil.getMemberId(token, secretKey);
+        String tokenValue = JwtUtil.getTokenValue(token);
+        String memberId = JwtUtil.getMemberId(tokenValue, secretKey);
 
         validateMeberBelongTeam(memberId, teamName);
 
@@ -57,8 +60,10 @@ public class TodoListService {
     private void validateMeberBelongTeam(String memberId, String teamName) {
         List<Member> membersInTeam = teamService.findMembers(teamName);
         boolean isBelong = false;
-
+        log.info("memberId : {}", memberId);
+        log.info("teamName : {}", teamName);
         for (Member member : membersInTeam) {
+            log.info("members in Team: : {} ", member.getLoginId());
             if (member.getLoginId() == memberId) {
                 isBelong = true;
                 break;
@@ -92,7 +97,8 @@ public class TodoListService {
     public void createTDDEntity(AddTDDForm addTDDForm, String type, String token) {
 
         Long todoListId = addTDDForm.getTodoListId();
-        String memberId = JwtUtil.getMemberId(token, secretKey);
+        String tokenValue = JwtUtil.getTokenValue(token);
+        String memberId = JwtUtil.getMemberId(tokenValue, secretKey);
         String content = addTDDForm.getContent();
         int importance = addTDDForm.getImportance();
 
