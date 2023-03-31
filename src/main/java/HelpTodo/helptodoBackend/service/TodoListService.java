@@ -3,6 +3,7 @@ package HelpTodo.helptodoBackend.service;
 import HelpTodo.helptodoBackend.Form.TodoListForm.AddTDDForm;
 import HelpTodo.helptodoBackend.Form.TodoListForm.AllTodoListForm;
 import HelpTodo.helptodoBackend.Form.TodoListForm.CreateTodoListForm;
+import HelpTodo.helptodoBackend.Form.TodoListForm.DeleteTddForm;
 import HelpTodo.helptodoBackend.domain.*;
 import HelpTodo.helptodoBackend.exception.ErrorCode_TodoList;
 import HelpTodo.helptodoBackend.exception.TodoListException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -30,10 +32,12 @@ public class TodoListService {
     private final TeamService teamService;
 
     @Transactional
-    public Long createTodoList(CreateTodoListForm createTodoListForm) {
+    public Long createTodoList(CreateTodoListForm createTodoListForm, String token) {
+
+        String tokenValue = JwtUtil.getTokenValue(token);
+        String memberId = JwtUtil.getMemberId(tokenValue, secretKey);
 
         String listTitle = createTodoListForm.getTitle();
-        String memberId = createTodoListForm.getMemberId();
         String teamName = createTodoListForm.getTeamName();
 
         Member findMember = memberService.findOne(memberId);
@@ -50,8 +54,6 @@ public class TodoListService {
         String tokenValue = JwtUtil.getTokenValue(token);
         String memberId = JwtUtil.getMemberId(tokenValue, secretKey);
 
-        validateMeberBelongTeam(memberId, teamName);
-
         List<TodoList> allTeam = todoListRepository.findAllByTeamName(teamName);
 
         return allTeam;
@@ -62,9 +64,9 @@ public class TodoListService {
         boolean isBelong = false;
         log.info("memberId : {}", memberId);
         log.info("teamName : {}", teamName);
-        for (Member member : membersInTeam) {
-            log.info("members in Team: : {} ", member.getLoginId());
-            if (member.getLoginId() == memberId) {
+        for (Member memberInTeam : membersInTeam) {
+            log.info("members in Team: : {} ", memberInTeam.getLoginId());
+            if (Objects.equals(memberInTeam.getLoginId(), memberId)) {
                 isBelong = true;
                 break;
             }
@@ -128,7 +130,8 @@ public class TodoListService {
         todoListRepository.save(findTodolist);
     }
 
-    public void deleteTdd(Long tddId) {
+    public  void deleteTdd(DeleteTddForm deleteTddForm) {
+        Long tddId = deleteTddForm.getTddId();
 
         todoListRepository.deleteTdd(tddId);
     }

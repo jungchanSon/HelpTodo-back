@@ -27,4 +27,4 @@ logging:
 
 jwt:
   secretKey: htdsp
-  expiredMs: 60000 #1000(1초) * 60 = 1분
+  expiredMs: 6000000 #1000(1초) * 60 *100= 100분

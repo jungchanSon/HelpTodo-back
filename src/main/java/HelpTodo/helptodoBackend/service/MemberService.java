@@ -30,8 +30,7 @@ public class MemberService {
     @Value("${jwt.secretKey}")
     private String secretKey;
 
-    @Value("${jwt.expiredMs}")
-    private Long expiredMs;
+    private Long expiredMs = 600000000l;
 
     @Transactional
     public String signup(SignupForm requestSignUpForm){

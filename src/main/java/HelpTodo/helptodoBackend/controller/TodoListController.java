@@ -1,6 +1,7 @@
 package HelpTodo.helptodoBackend.controller;
 
 import HelpTodo.helptodoBackend.DTO.TodoListController.ResponseTodoList;
+import HelpTodo.helptodoBackend.Form.TodoListForm.DeleteTddForm;
 import HelpTodo.helptodoBackend.Form.TodoListForm.AddTDDForm;
 import HelpTodo.helptodoBackend.Form.TodoListForm.AllTodoListForm;
 import HelpTodo.helptodoBackend.Form.TodoListForm.CreateTodoListForm;
@@ -28,15 +29,14 @@ public class TodoListController {
     private final TeamService teamService;
 
     @RequestMapping("/todolist/create")
-    public ResponseEntity createTodoList(@Valid CreateTodoListForm createTodolistForm, BindingResult result) {
+    public ResponseEntity createTodoList(@RequestHeader(value = "Authorization") String token, @Valid CreateTodoListForm createTodolistForm, BindingResult result) {
 
         if (result.hasErrors()) {
-
             return ResponseEntity.ok().body("create todoList Fail");
         }
 
         // TODO: 2023-03-22 createTodoListFrom.toServiceDto 만들어서 보내주기..
-        todoListService.createTodoList(createTodolistForm);
+        todoListService.createTodoList(createTodolistForm, token);
 
         return ResponseEntity.ok().body("create todolist ok");
     }
@@ -121,11 +121,25 @@ public class TodoListController {
     }
 
     @RequestMapping("/todolist/tdd/delete")
-    public ResponseEntity deleteTdd(@RequestHeader(value = "Authorization") String token,@RequestParam(name="tddId") Long tddId) {
-        todoListService.deleteTdd(tddId);
+    public ResponseEntity deleteTdd(@RequestHeader(value = "Authorization") String token, @Valid DeleteTddForm deleteTddForm, BindingResult result) {
+        log.info("deleteTddForm getTddId {}", deleteTddForm.getTddId());
+        log.info("deleteTddForm getTeamName {}", deleteTddForm.getTeamName());
+        log.info("deleteTddForm token {}", token);
+        todoListService.deleteTdd(deleteTddForm);
 
-        return ResponseEntity.ok().body("delete todo card Ok");
+        List<TodoList> allByTeamName = todoListService.findAllByTeamName(new AllTodoListForm(deleteTddForm.getTeamName()), token);
 
+        List<ResponseTodoList> responseTodoLists = new ArrayList<>();
+        for(TodoList todoList : allByTeamName) {
+            ResponseTodoList responseTodolist = ResponseTodoList.createResponseTodolist(todoList.getId(),
+                    todoList.getTitle(),
+                    todoList.getMember().getName(),
+                    todoList.getCreateDate(),
+                    todoList.getTdds());
+            responseTodoLists.add(responseTodolist);
+        }
+
+        return ResponseEntity.ok().body(responseTodoLists);
     }
 
     @RequestMapping("/todolist/change/tddType")

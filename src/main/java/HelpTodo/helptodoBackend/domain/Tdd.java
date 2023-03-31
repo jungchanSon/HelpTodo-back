@@ -44,7 +44,7 @@ public class Tdd {
     @CreatedDate
     private LocalDateTime createDate;
 
-    private int  importance;
+    private int importance;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "todolist_id")

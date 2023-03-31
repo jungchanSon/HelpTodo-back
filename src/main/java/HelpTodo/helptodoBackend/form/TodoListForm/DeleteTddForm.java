@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class CreateTodoListForm {
-
-    private String title;
+public class DeleteTddForm {
     private String teamName;
+    private Long tddId;
 }

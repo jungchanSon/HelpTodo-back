@@ -35,25 +35,21 @@ public class ResponseTodoList {
 
         for(Tdd t : tdds){
             TddType type = t.getTddtype();
-
+            ResponseTdd responseTodo = ResponseTdd.builder()
+                    .tddId(t.getId())
+                    .content(t.getContent())
+                    .createDate(t.getCreateDate())
+                    .important(t.getImportance())
+                    .build();
             if(type == TddType.TODO){
-                ResponseTdd responseTodo = ResponseTdd.createResponseTdd(t.getId(),
-                                                                         t.getContent(),
-                                                                         t.getCreateDate());
 
                 responseTodoList.resTodos.add(responseTodo);
             } else if(type == TddType.DOING){
-                ResponseTdd responseDoing = ResponseTdd.createResponseTdd(t.getId(),
-                                                                         t.getContent(),
-                                                                         t.getCreateDate());
 
-                responseTodoList.resDoings.add(responseDoing);
+                responseTodoList.resDoings.add(responseTodo);
             } else if(type == TddType.DONE){
-                ResponseTdd responseDone = ResponseTdd.createResponseTdd(t.getId(),
-                                                                         t.getContent(),
-                                                                         t.getCreateDate());
 
-                responseTodoList.resDones.add(responseDone);
+                responseTodoList.resDones.add(responseTodo);
             }
 
         }
