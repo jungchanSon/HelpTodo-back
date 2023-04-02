@@ -88,6 +88,8 @@ public class TeamService {
         String memberId = JwtUtil.getMemberId(tokenValue, secretKey);
 
         Member member = memberRepository.findOne(memberId);
+        log.info("teamname : {}", joinTeamForm.getTeamName());
+        log.info("memberPW : {}", joinTeamForm.getTeamPassword());
         Team team = teamRepository.findOne(joinTeamForm.getTeamName());
 
         if (!teamPassword.isEmpty()){ //팀 비번 있으면 확인.
