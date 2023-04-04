@@ -1,10 +1,8 @@
 package HelpTodo.helptodoBackend.controller;
 
+import HelpTodo.helptodoBackend.Components.TeamSseEmitters;
 import HelpTodo.helptodoBackend.DTO.TodoListController.ResponseTodoList;
-import HelpTodo.helptodoBackend.Form.TodoListForm.DeleteTddForm;
-import HelpTodo.helptodoBackend.Form.TodoListForm.AddTDDForm;
-import HelpTodo.helptodoBackend.Form.TodoListForm.AllTodoListForm;
-import HelpTodo.helptodoBackend.Form.TodoListForm.CreateTodoListForm;
+import HelpTodo.helptodoBackend.Form.TodoListForm.*;
 import HelpTodo.helptodoBackend.domain.TddType;
 import HelpTodo.helptodoBackend.domain.TodoList;
 import HelpTodo.helptodoBackend.service.MemberService;
@@ -27,7 +25,9 @@ public class TodoListController {
     private final TodoListService todoListService;
     private final MemberService memberService;
     private final TeamService teamService;
+    private final TeamSseEmitters teamSseEmitters;
 
+    // 투두리스트 생성
     @RequestMapping("/todolist/create")
     public ResponseEntity createTodoList(@RequestHeader(value = "Authorization") String token, @Valid CreateTodoListForm createTodolistForm, BindingResult result) {
 
@@ -37,10 +37,11 @@ public class TodoListController {
 
         // TODO: 2023-03-22 createTodoListFrom.toServiceDto 만들어서 보내주기..
         todoListService.createTodoList(createTodolistForm, token);
-
+        teamSseEmitters.updateTodoList(createTodolistForm.getTeamName());
         return ResponseEntity.ok().body("create todolist ok");
     }
 
+    //투두리스트 조회
     @RequestMapping("/todolist/all")
     public ResponseEntity allTodoList(@RequestHeader(value = "Authorization") String token, @Valid AllTodoListForm allTodoListForm, BindingResult result) {
 
@@ -94,11 +95,12 @@ public class TodoListController {
 //    }
 
     // TODO: 2022-11-27
+    //투두리스트 카드 추가
     @RequestMapping("/todolist/addTDD/{type}")
     public ResponseEntity addTodo(@RequestHeader(value = "Authorization") String token, @Valid AddTDDForm addTDDForm, @PathVariable String type, BindingResult result) {
 
         todoListService.createTDDEntity(addTDDForm, type, token);
-
+        teamSseEmitters.updateTodoList(addTDDForm.getTeamName());
         return ResponseEntity.ok().body("create todo card OK");
     }
 //
@@ -114,9 +116,9 @@ public class TodoListController {
 
     // TODO: 2023-03-29 올바른 사용자인지 체크해야하나 ?
     @RequestMapping("/todolist/delete")
-    public ResponseEntity deleteTodoList(@RequestHeader(value = "Authorization") String token, @RequestParam(name="todoListId") Long todoListId) {
-        todoListService.deleteTodoList(todoListId);
-
+    public ResponseEntity deleteTodoList(@RequestHeader(value = "Authorization") String token, @Valid DeleteTodoListForm deleteTodoListForm, BindingResult result) {
+        todoListService.deleteTodoList(deleteTodoListForm.getTodoListId());
+        teamSseEmitters.updateTodoList(deleteTodoListForm.getTeamName());
         return ResponseEntity.ok().body("delete todoList ok");
     }
 
@@ -139,13 +141,15 @@ public class TodoListController {
             responseTodoLists.add(responseTodolist);
         }
 
+        teamSseEmitters.updateTodoList(deleteTddForm.getTeamName());
         return ResponseEntity.ok().body(responseTodoLists);
     }
 
     @RequestMapping("/todolist/change/tddType")
-    public ResponseEntity changeTddType(@RequestHeader(value = "Authorization") String token, @RequestParam(name="tddId") Long tddId, @RequestParam(name="tddType") TddType type){
-        todoListService.changeTddType(tddId, type);
+    public ResponseEntity changeTddType(@RequestHeader(value = "Authorization") String token, @Valid ChangeTddTypeForm changeTddTypeForm, BindingResult result){
+        todoListService.changeTddType(changeTddTypeForm.getTddId(), changeTddTypeForm.getTddType());
 
+        teamSseEmitters.updateTodoList(changeTddTypeForm.getTeamName());
         return ResponseEntity.ok().body("change todocard Ok");
     }
 }

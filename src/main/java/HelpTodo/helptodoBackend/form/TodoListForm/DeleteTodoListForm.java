@@ -3,12 +3,9 @@ package HelpTodo.helptodoBackend.Form.TodoListForm;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
-public class AddTDDForm {
-
+@Getter
+@Setter
+public class DeleteTodoListForm {
     String teamName;
-    String Content;
-    Long TodoListId;
-
-    int importance;
+    Long todoListId;
 }
