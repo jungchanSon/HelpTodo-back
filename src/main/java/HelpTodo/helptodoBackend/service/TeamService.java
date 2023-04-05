@@ -38,16 +38,17 @@ public class TeamService {
 //        validateEmpty(team);
         String tokenValue = JwtUtil.getTokenValue(token);
         String creatorId = JwtUtil.getMemberId(tokenValue, secretKey);
-
+        Member member = memberRepository.findOne(creatorId);
+        String memberName = member.getName();
         Team team = new Team().builder()
                 .name(createTeamForm.getTeamName())
                 .password(createTeamForm.getTeamPassword())
                 .creatorId(creatorId)
+                .creatorName(memberName)
                 .build();
 
         validateCreateTeam(team);
 
-        Member member = memberRepository.findOne(creatorId);
         MemberTeam.createMemberTeam(member, team);
 
         teamRepository.save(team);

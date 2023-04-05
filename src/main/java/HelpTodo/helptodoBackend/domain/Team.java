@@ -30,6 +30,8 @@ public class Team {
 
     private String creatorId;
 
+    private String creatorName;
+
     @CreatedDate
     private LocalDateTime createDate;
 

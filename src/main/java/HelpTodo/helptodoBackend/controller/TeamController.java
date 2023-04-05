@@ -58,7 +58,7 @@ public class TeamController {
 
             ResponseTeam responseTeam = ResponseTeam.builder()
                                                     .name(t.getName())
-                                                    .creatorId(t.getCreatorId())
+                                                    .creatorName(t.getCreatorId())
                                                     .createDate(t.getCreateDate())
                                                     .build();
             responseAllTeamList.add(responseTeam);
@@ -77,10 +77,15 @@ public class TeamController {
         for(Team t : allTeams){
             ResponseTeam responseTeam = ResponseTeam.builder()
                                                     .name(t.getName())
-                                                    .creatorId(t.getCreatorId())
+                                                    .creatorName(t.getCreatorName())
                                                     .createDate(t.getCreateDate())
                                                     .build();
-
+            if(t.getPassword().isEmpty()){
+                responseTeam.setHasPassword(false);
+            }
+            else {
+                responseTeam.setHasPassword(true);
+            }
             responseOtherTeams.add(responseTeam);
         }
         return ResponseEntity.ok().body(responseOtherTeams);
@@ -95,7 +100,7 @@ public class TeamController {
         for(Team t : myTeams){
             ResponseTeam responseTeam = ResponseTeam.builder()
                                                     .name(t.getName())
-                                                    .creatorId(t.getCreatorId())
+                                                    .creatorName(t.getCreatorName())
                                                     .createDate(t.getCreateDate())
                                                     .build();
             responseMyTeams.add(responseTeam);
