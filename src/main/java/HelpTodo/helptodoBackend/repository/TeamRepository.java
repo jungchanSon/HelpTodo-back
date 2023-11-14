@@ -1,12 +1,14 @@
 package HelpTodo.helptodoBackend.repository;
 
 import HelpTodo.helptodoBackend.domain.Member;
+import HelpTodo.helptodoBackend.domain.MemberTeam;
 import HelpTodo.helptodoBackend.domain.Team;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @RequiredArgsConstructor
@@ -46,4 +48,8 @@ public class TeamRepository {
         return em.createQuery("select t from Team t", Team.class).getResultList();
     }
 
+    @Transactional
+    public void removeMemberTeam(MemberTeam  memberTeam){
+        em.remove(memberTeam);
+    }
 }

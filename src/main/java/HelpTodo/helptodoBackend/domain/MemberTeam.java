@@ -2,20 +2,19 @@ package HelpTodo.helptodoBackend.domain;
 
 import java.time.LocalDateTime;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "member_team")
-@Getter
 @EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 public class MemberTeam {
 
     @Id
@@ -36,12 +35,18 @@ public class MemberTeam {
 
     public void setMember(Member member) {
         this.member = member;
-        member.getMemberTeam().add(this);
+        member.addMemberTeam(this);
     }
-
     public void setTeam(Team team) {
         this.team = team;
-        team.getMemberTeams().add(this);
+        team.addMemberTeam(this);
+    }
+
+    public void removeM(){
+        this.member = null;
+    }
+    public void removeT(){
+        this.team = null;
     }
     public static MemberTeam createMemberTeam(Member member, Team team){
         MemberTeam memberTeam = new MemberTeam();

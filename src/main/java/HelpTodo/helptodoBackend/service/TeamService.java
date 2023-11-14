@@ -1,18 +1,22 @@
 package HelpTodo.helptodoBackend.service;
 
-import HelpTodo.helptodoBackend.form.team.CreateTeamForm;
-import HelpTodo.helptodoBackend.form.team.JoinTeamForm;
+import HelpTodo.helptodoBackend.Form.ExitTeamForm;
+import HelpTodo.helptodoBackend.Form.team.CreateTeamForm;
+import HelpTodo.helptodoBackend.Form.team.FindMyMembersForm;
+import HelpTodo.helptodoBackend.Form.team.JoinTeamForm;
 import HelpTodo.helptodoBackend.domain.MemberTeam;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.exception.ErrorCode_Team;
 import HelpTodo.helptodoBackend.exception.TeamException;
 import HelpTodo.helptodoBackend.repository.MemberRepository;
+import HelpTodo.helptodoBackend.repository.MemberTeamReponsitory;
 import HelpTodo.helptodoBackend.repository.TeamRepository;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import HelpTodo.helptodoBackend.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +36,8 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
+    private final MemberTeamReponsitory memberTeamReponsitory;
+
     @Transactional
     public String createTeam(CreateTeamForm createTeamForm, String token) {
 //        validateDuplicateTeam(team);
@@ -49,10 +55,10 @@ public class TeamService {
 
         validateCreateTeam(team);
 
-        MemberTeam.createMemberTeam(member, team);
-
+        MemberTeam memberTeam = MemberTeam.createMemberTeam(member, team);
+//        team.addMemberTeam(memberTeam);
         teamRepository.save(team);
-
+        memberTeamReponsitory.save(memberTeam);
         return team.getName();
     }
 
@@ -168,5 +174,48 @@ public class TeamService {
         }
 
         return membersInTeam;
+    }
+
+//    마저 완성하기
+    @Transactional
+    public void exitTeam(ExitTeamForm exitTeamForm, String token) {
+        String tokenValue = JwtUtil.getTokenValue(token);
+        String memberId = JwtUtil.getMemberId(tokenValue, secretKey);
+        Member member = memberRepository.findByMemberId(memberId).get(0);
+        log.info("Mem : {}", member);
+
+        Team findTeam = teamRepository.findOne(exitTeamForm.getTeamName());
+        log.info("team : {}", findTeam);
+
+        List<MemberTeam> memberTeams = findTeam.getMemberTeams();
+
+        for (MemberTeam memberTeam : memberTeams) {
+            log.info("member in memberTeam {}", memberTeam.getMember());
+            if (Objects.equals(memberTeam.getMember().getLoginId(), memberId)){
+                findTeam.getMemberTeams().remove(memberTeam);
+                member.getMemberTeam().remove(memberTeam);
+                log.info("findTeam.getMemberTeams() : {} ", findTeam.getMemberTeams());
+                log.info("member.getMemberTeam() : {}", member.getMemberTeam());
+                log.info("MT.M : {}", memberTeam.getMember());
+                log.info("MT.T : {}" , memberTeam.getTeam());
+                teamRepository.removeMemberTeam(memberTeam);
+                log.info("memberTeam Id : {}", memberTeam.getId());
+                break;
+            }
+        }
+
+    }
+
+    public List<String> findMyMembers(FindMyMembersForm requestForm) {
+        String teamName = requestForm.getTeamName();
+        Team team = teamRepository.findOne(teamName);
+        List<MemberTeam> memberTeams = team.getMemberTeams();
+
+        List<String> responseList = new ArrayList();
+
+        for (MemberTeam memberTeam : memberTeams) {
+            responseList.add(memberTeam.getMember().getName());
+        }
+        return responseList;
     }
 }

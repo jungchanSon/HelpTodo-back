@@ -1,11 +1,25 @@
-version: '3'
+version: '3.8'
 
 services:
+  db:
+    image: mysql:8.0.22
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 98849884
+      MYSQL_DATABASE: todo
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD']
+      interval: 10s
+      timeout: 2s
+      retries: 100
+
   app:
-    container_name: todo
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile
     ports:
       - "8080:8080"
-    restart: always
+    environment:
+      - ADMINER_DEFAULT_SERVER=db
+

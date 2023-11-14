@@ -4,10 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -18,6 +16,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class Team {
 
     @Id
@@ -47,15 +46,9 @@ public class Team {
         this.creatorId = memberId;
     }
 
-    public void add(MemberTeam memberTeam){
-        memberTeam.setTeam(this);
-        this.memberTeams.add(memberTeam);
 
-    }
-
-    public void addJoinTeam (MemberTeam memberTeam) {
+    public void addMemberTeam(MemberTeam memberTeam) {
         memberTeams.add(memberTeam);
-        memberTeam.setTeam(this);
     }
 
     public void setName(String name) {
@@ -65,7 +58,7 @@ public class Team {
         Team team = new Team();
         team.setName(name);
         for(MemberTeam jointTeam : memberTeams){
-            team.addJoinTeam(jointTeam);
+            team.addMemberTeam(jointTeam);
         }
 
         return team;

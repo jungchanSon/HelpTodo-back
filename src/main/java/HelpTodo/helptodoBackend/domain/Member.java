@@ -9,10 +9,8 @@ import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -23,6 +21,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Setter
 public class Member {
 
     @Id
@@ -43,7 +42,7 @@ public class Member {
     private List<TodoList> todolist = new ArrayList<>();
 
 //    memberTeam 매핑
-    @OneToMany(mappedBy = "member", cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @Builder.Default
     private List<MemberTeam> memberTeam = new ArrayList<>();
 
@@ -78,5 +77,8 @@ public class Member {
         member.loginPw = pw;
 
         return member;
+    }
+    public void addMemberTeam(MemberTeam memberTeam){
+        this.memberTeam.add(memberTeam);
     }
 }

@@ -22,7 +22,7 @@ public class MemberController {
     private final MemberService memberService;
 
     //회원 가입 컨트롤러
-    @RequestMapping(value = "/members/signup")
+    @RequestMapping( value = "/members/signup")
     public ResponseEntity signup(@Valid SignupForm signupForm, BindingResult result){
 
         if (result.hasErrors()) {

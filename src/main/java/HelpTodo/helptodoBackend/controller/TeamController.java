@@ -1,17 +1,27 @@
 package HelpTodo.helptodoBackend.controller;
 
 import HelpTodo.helptodoBackend.DTO.teamContoller.ResponseTeam;
-import HelpTodo.helptodoBackend.form.team.JoinTeamForm;
+import HelpTodo.helptodoBackend.Form.ExitTeamForm;
+import HelpTodo.helptodoBackend.Form.TokenForm;
+import HelpTodo.helptodoBackend.Form.team.FindMyMembersForm;
+import HelpTodo.helptodoBackend.Form.team.JoinTeamForm;
+import HelpTodo.helptodoBackend.domain.Member;
+import HelpTodo.helptodoBackend.domain.MemberTeam;
 import HelpTodo.helptodoBackend.domain.Team;
-import HelpTodo.helptodoBackend.form.team.CreateTeamForm;
+import HelpTodo.helptodoBackend.Form.team.CreateTeamForm;
+import HelpTodo.helptodoBackend.domain.TodoList;
+import HelpTodo.helptodoBackend.service.MemberService;
+import HelpTodo.helptodoBackend.service.MemberTeamService;
 import HelpTodo.helptodoBackend.service.TeamService;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import javax.validation.Valid;
 
+import HelpTodo.helptodoBackend.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +32,11 @@ import org.springframework.web.bind.annotation.*;
 public class TeamController {
 
     private final TeamService teamService;
+    private final MemberTeamService memberTeamService;
+    private final MemberService memberService;
 
+    @Value("${jwt.secretKey}")
+    private String secretKey;
 
     //생성 후 -> 생성된 팀에 멤버 가입 시키기
     @RequestMapping("/team/create")
@@ -48,6 +62,15 @@ public class TeamController {
         return ResponseEntity.ok().body("팀 가입 완료");
     }
 
+//TODO : 마저 완성하기
+//    @RequestMapping(value = "/team/exitTeam")
+//    public ResponseEntity exitTeam(@RequestHeader(value = "Authorization") String token, @Valid ExitTeamForm exitTeamForm, BindingResult result) {
+//
+//        teamService.exitTeam(exitTeamForm, token);
+//
+//        return ResponseEntity.ok().body("팀 탈퇴 완료");
+//
+//    }
     @RequestMapping(value = "/team/findTeamList")
     public ResponseEntity findAllTeamList(){
 
@@ -75,6 +98,7 @@ public class TeamController {
         List<ResponseTeam> responseOtherTeams = new ArrayList<>();
 
         for(Team t : allTeams){
+            log.info("team : {}", t);
             ResponseTeam responseTeam = ResponseTeam.builder()
                                                     .name(t.getName())
                                                     .creatorName(t.getCreatorName())
@@ -106,5 +130,13 @@ public class TeamController {
             responseMyTeams.add(responseTeam);
         }
         return ResponseEntity.ok().body(responseMyTeams);
+    }
+
+    @RequestMapping(value = "/team/findMyMembers")
+    public ResponseEntity findMyMembers(@RequestHeader(value = "Authorization") String token, FindMyMembersForm requestForm){
+
+        List<String> myMembers = teamService.findMyMembers(requestForm);
+
+        return ResponseEntity.ok().body(myMembers);
     }
 }
