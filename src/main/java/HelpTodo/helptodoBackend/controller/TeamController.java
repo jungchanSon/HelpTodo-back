@@ -2,14 +2,10 @@ package HelpTodo.helptodoBackend.controller;
 
 import HelpTodo.helptodoBackend.DTO.teamContoller.ResponseTeam;
 import HelpTodo.helptodoBackend.Form.ExitTeamForm;
-import HelpTodo.helptodoBackend.Form.TokenForm;
 import HelpTodo.helptodoBackend.Form.team.FindMyMembersForm;
 import HelpTodo.helptodoBackend.Form.team.JoinTeamForm;
-import HelpTodo.helptodoBackend.domain.Member;
-import HelpTodo.helptodoBackend.domain.MemberTeam;
 import HelpTodo.helptodoBackend.domain.Team;
 import HelpTodo.helptodoBackend.Form.team.CreateTeamForm;
-import HelpTodo.helptodoBackend.domain.TodoList;
 import HelpTodo.helptodoBackend.service.MemberService;
 import HelpTodo.helptodoBackend.service.MemberTeamService;
 import HelpTodo.helptodoBackend.service.TeamService;
@@ -18,7 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import javax.validation.Valid;
 
-import HelpTodo.helptodoBackend.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +34,7 @@ public class TeamController {
     private String secretKey;
 
     //생성 후 -> 생성된 팀에 멤버 가입 시키기
-    @RequestMapping("/team/create")
+    @RequestMapping(value = "/team/create", method = {RequestMethod.POST})
     public ResponseEntity createTeam(@RequestHeader(value = "Authorization") String token, @Valid CreateTeamForm createTeamForm, BindingResult result) {
 
         if (result.hasErrors()) {
@@ -50,7 +45,7 @@ public class TeamController {
         return ResponseEntity.ok().body("create team OK");
     }
 
-    @RequestMapping("/team/join")
+    @RequestMapping(value = "/team/join", method = {RequestMethod.POST})
     public ResponseEntity joinTeam(@RequestHeader(value = "Authorization") String token, @Valid JoinTeamForm joinTeamForm, BindingResult result){
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body("Fail join team");
@@ -90,7 +85,7 @@ public class TeamController {
         return ResponseEntity.ok().body(responseAllTeamList);
     }
 
-    @RequestMapping(value = "/team/findOtherTeamList" )
+    @RequestMapping(value = "/team/findOtherTeamList", method = {RequestMethod.POST} )
     public ResponseEntity findOtherTeamList(@RequestHeader(value = "Authorization") String token){
 
 
@@ -115,7 +110,7 @@ public class TeamController {
         return ResponseEntity.ok().body(responseOtherTeams);
     }
 
-    @RequestMapping(value = "/team/findMyTeam" )
+    @RequestMapping(value = "/team/findMyTeam" , method = {RequestMethod.POST})
     public ResponseEntity findMyTeams(@RequestHeader(value = "Authorization") String token){
 
         List<Team> myTeams = teamService.findMyTeams(token);
@@ -132,7 +127,7 @@ public class TeamController {
         return ResponseEntity.ok().body(responseMyTeams);
     }
 
-    @RequestMapping(value = "/team/findMyMembers")
+    @RequestMapping(value = "/team/findMyMembers", method = {RequestMethod.POST})
     public ResponseEntity findMyMembers(@RequestHeader(value = "Authorization") String token, FindMyMembersForm requestForm){
 
         List<String> myMembers = teamService.findMyMembers(requestForm);
