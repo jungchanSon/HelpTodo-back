@@ -1,7 +1,7 @@
 package HelpTodo.helptodoBackend.service;
 
-import HelpTodo.helptodoBackend.Form.Member.LoginForm;
-import HelpTodo.helptodoBackend.Form.Member.SignupForm;
+import HelpTodo.helptodoBackend.form.Member.LoginForm;
+import HelpTodo.helptodoBackend.form.Member.SignupForm;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.exception.ErrorCode_Member;
 import HelpTodo.helptodoBackend.exception.MemberException;

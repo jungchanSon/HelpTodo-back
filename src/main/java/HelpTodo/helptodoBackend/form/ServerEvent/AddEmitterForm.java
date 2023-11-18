@@ -1,4 +1,4 @@
-package HelpTodo.helptodoBackend.Form.ServerEvent;
+package HelpTodo.helptodoBackend.form.ServerEvent;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,6 @@
 package HelpTodo.helptodoBackend.service;
 
 import HelpTodo.helptodoBackend.Components.TeamSseEmitters;
-import HelpTodo.helptodoBackend.Form.ServerEvent.AddEmitterForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
