@@ -1,14 +1,14 @@
 spring:
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/helptodo2
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
 #  datasource:
-#    url: jdbc:mysql://34.64.155.104:3306/todo?serverTimezone=UTC&characterEncoding=UTF-8
-#    username: root
-#    password: jungchanjungchan
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:h2:tcp://localhost/~/helptodo2
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+  datasource:
+    url: jdbc:mysql://000.000.000.000:0000/todo?serverTimezone=UTC&characterEncoding=UTF-8
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
