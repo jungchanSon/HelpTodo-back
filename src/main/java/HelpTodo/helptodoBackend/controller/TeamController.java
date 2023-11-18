@@ -57,16 +57,15 @@ public class TeamController {
         return ResponseEntity.ok().body("팀 가입 완료");
     }
 
-//TODO : 마저 완성하기
-//    @RequestMapping(value = "/team/exitTeam")
-//    public ResponseEntity exitTeam(@RequestHeader(value = "Authorization") String token, @Valid ExitTeamForm exitTeamForm, BindingResult result) {
-//
-//        teamService.exitTeam(exitTeamForm, token);
-//
-//        return ResponseEntity.ok().body("팀 탈퇴 완료");
-//
-//    }
-    @RequestMapping(value = "/team/findTeamList")
+    @RequestMapping(value = "/team/exitTeam", method = {RequestMethod.POST})
+    public ResponseEntity exitTeam(@RequestHeader(value = "Authorization") String token, @Valid ExitTeamForm exitTeamForm, BindingResult result) {
+
+        teamService.exitTeam(exitTeamForm, token);
+
+        return ResponseEntity.ok().body("");
+
+    }
+    @RequestMapping(value = "/team/findTeamList", method = {RequestMethod.POST})
     public ResponseEntity findAllTeamList(){
 
         List<Team> allTeams = teamService.findAllTeams();

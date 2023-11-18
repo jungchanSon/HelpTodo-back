@@ -52,4 +52,9 @@ public class TeamRepository {
     public void removeMemberTeam(MemberTeam  memberTeam){
         em.remove(memberTeam);
     }
+
+    @Transactional
+    public void removeTeam(Team findTeam) {
+        em.remove(findTeam);
+    }
 }

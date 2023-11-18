@@ -190,20 +190,15 @@ public class TeamService {
         List<MemberTeam> memberTeams = findTeam.getMemberTeams();
 
         for (MemberTeam memberTeam : memberTeams) {
-            log.info("member in memberTeam {}", memberTeam.getMember());
             if (Objects.equals(memberTeam.getMember().getLoginId(), memberId)){
                 findTeam.getMemberTeams().remove(memberTeam);
-                member.getMemberTeam().remove(memberTeam);
-                log.info("findTeam.getMemberTeams() : {} ", findTeam.getMemberTeams());
-                log.info("member.getMemberTeam() : {}", member.getMemberTeam());
-                log.info("MT.M : {}", memberTeam.getMember());
-                log.info("MT.T : {}" , memberTeam.getTeam());
                 teamRepository.removeMemberTeam(memberTeam);
-                log.info("memberTeam Id : {}", memberTeam.getId());
                 break;
             }
         }
-
+        if (memberTeams.size() == 0){
+            teamRepository.removeTeam(findTeam);
+        }
     }
 
     public List<String> findMyMembers(FindMyMembersForm requestForm) {
