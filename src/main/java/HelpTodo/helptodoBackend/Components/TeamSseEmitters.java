@@ -24,7 +24,7 @@ public class TeamSseEmitters {
             List<SseEmitter> emitterList = new CopyOnWriteArrayList();
             emitterList.add(memberSseEmitter);
             teamEmitterHashMap.put(teamName, emitterList);
-        } else{
+        } else if (!memberEmitterList.contains(memberSseEmitter)){
             memberEmitterList.add(memberSseEmitter);
             teamEmitterHashMap.put(teamName, memberEmitterList);
         }
@@ -45,9 +45,9 @@ public class TeamSseEmitters {
         sseEmitters.forEach((emitter) -> {
             try{
                 log.info("send emitter : {}", emitter);
-                emitter.send(SseEmitter.event().name("updateTodoList").data("updateTodoList"));
+                emitter.send(SseEmitter.event().name("updateTodoList").data("updateTodoList").reconnectTime(500));
             } catch (IOException e) {
-                e.printStackTrace();
+                sseEmitters.remove(emitter);
             }
         });
         log.info("Update TodoList END");
