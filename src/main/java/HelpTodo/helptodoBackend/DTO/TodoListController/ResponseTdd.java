@@ -1,5 +1,6 @@
 package HelpTodo.helptodoBackend.DTO.TodoListController;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.*;
@@ -13,6 +14,9 @@ public class ResponseTdd {
     private String content;
     private LocalDateTime createDate;
     private int important;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String manager;
 
     public static ResponseTdd createResponseTdd(Long id,String content, LocalDateTime localDateTime, int important){
         ResponseTdd responseTdd = ResponseTdd.builder()

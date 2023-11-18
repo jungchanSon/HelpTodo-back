@@ -40,9 +40,12 @@ public class ResponseTodoList {
                     .content(t.getContent())
                     .createDate(t.getCreateDate())
                     .important(t.getImportance())
+                    .startDate(t.getStartDate())
+                    .endDate(t.getEndDate())
+                    .manager(t.getManager())
                     .build();
-            if(type == TddType.TODO){
 
+            if(type == TddType.TODO){
                 responseTodoList.resTodos.add(responseTodo);
             } else if(type == TddType.DOING){
 

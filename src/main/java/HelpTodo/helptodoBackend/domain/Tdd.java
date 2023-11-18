@@ -1,5 +1,6 @@
 package HelpTodo.helptodoBackend.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,22 +59,15 @@ public class Tdd {
     @Builder.Default
     private List<TodoComment> todoComments = new ArrayList<>();
 
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String manager;
 
     public void setMember(Member member) {
         this.member = member;
         member.getTdds().add(this);
     }
 
-    public static Tdd createTdd(TddType type, String content,  int importance, Member member){
-        Tdd tdd = new Tdd().builder()
-            .content(content)
-            .importance(importance)
-            .tddtype(type)
-            .member(member)
-            .build();
-
-        return tdd;
-    }
     public void setTodolist(TodoList todolist){
         this.todolist = todolist;
     }

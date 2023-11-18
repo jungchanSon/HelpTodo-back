@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -103,7 +104,9 @@ public class TodoListService {
         String memberId = JwtUtil.getMemberId(tokenValue, secretKey);
         String content = addTDDForm.getContent();
         int importance = addTDDForm.getImportance();
-
+        LocalDate startDate = LocalDate.parse(addTDDForm.getStartDate());
+        LocalDate endDate = LocalDate.parse(addTDDForm.getEndDate());
+        String manager = addTDDForm.getManager();
         Member member = memberService.findOne(memberId);
         TddType TDDType = null;
 
@@ -122,6 +125,9 @@ public class TodoListService {
                 .content(content)
                 .importance(importance)
                 .member(member)
+                .startDate(startDate)
+                .endDate(endDate)
+                .manager(manager)
                 .build();
 
         TodoList findTodolist = todoListRepository.findOneById(todoListId);
@@ -143,5 +149,9 @@ public class TodoListService {
 
     public void changeTddType(Long tddId, TddType tddType) {
         todoListRepository.changeTddType(tddId, tddType);
+    }
+
+    public void changeTodoDate(Long id, String startDate, String endDate) {
+        todoListRepository.changeTodoDate(id, startDate, endDate);
     }
 }
