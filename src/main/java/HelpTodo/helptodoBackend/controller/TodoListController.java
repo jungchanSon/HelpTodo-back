@@ -150,4 +150,12 @@ public class TodoListController {
         teamSseEmitters.updateTodoList(changeTddTypeForm.getTeamName());
         return ResponseEntity.ok().body("change todocard Ok");
     }
+
+    @RequestMapping( value="/todoList/change/todo/date", method = RequestMethod.POST)
+    public ResponseEntity changeTodoDate(@RequestHeader(value = "Authorization") String token, @Valid ChangeTodoDateForm changeTodoDateForm, BindingResult result){
+        todoListService.changeTodoDate(changeTodoDateForm.getId(), changeTodoDateForm.getStartDate(), changeTodoDateForm.getEndDate());
+
+        teamSseEmitters.updateTodoList(changeTodoDateForm.getTeamName());
+        return ResponseEntity.ok().body("change todocard Ok");
+    }
 }

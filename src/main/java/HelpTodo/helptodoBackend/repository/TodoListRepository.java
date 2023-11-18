@@ -3,6 +3,8 @@ package HelpTodo.helptodoBackend.repository;
 import HelpTodo.helptodoBackend.domain.Tdd;
 import HelpTodo.helptodoBackend.domain.TddType;
 import HelpTodo.helptodoBackend.domain.TodoList;
+
+import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -51,6 +53,15 @@ public class TodoListRepository {
         Tdd tdd = em.find(Tdd.class, tddId);
 
         tdd.setTddtype(tddtype);
+
+        em.persist(tdd);
+    }
+
+    public void changeTodoDate(Long id, String startDate, String endDate) {
+        Tdd tdd = em.find(Tdd.class, id);
+
+        tdd.setStartDate(LocalDate.parse(startDate));
+        tdd.setEndDate(LocalDate.parse(endDate));
 
         em.persist(tdd);
     }
