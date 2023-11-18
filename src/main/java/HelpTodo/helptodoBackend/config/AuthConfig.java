@@ -33,7 +33,7 @@ public class AuthConfig {
             .cors()
             .and()
             .authorizeHttpRequests()
-            .antMatchers("/members/**").permitAll()
+            .antMatchers("/members/**/*").permitAll()
             .anyRequest().authenticated()
             .and()
             .sessionManagement()
