@@ -50,8 +50,7 @@ public class TodoListService {
         return todoList.getId();
     }
 
-    public List<TodoList> findAllByTeamName(AllTodoListForm allTodoListForm, String token) {
-        String teamName = allTodoListForm.getTeamName();
+    public List<TodoList> findAllByTeamName(String teamName, String token) {
         String tokenValue = JwtUtil.getTokenValue(token);
         String memberId = JwtUtil.getMemberId(tokenValue, secretKey);
 

@@ -47,7 +47,7 @@ public class TodoListController {
             return null;
         }
 
-        List<TodoList> allByTeamName = todoListService.findAllByTeamName(allTodoListForm, token);
+        List<TodoList> allByTeamName = todoListService.findAllByTeamName(allTodoListForm.getTeamName(), token);
 
         List<ResponseTodoList> responseTodoLists = new ArrayList<>();
         for(TodoList todoList : allByTeamName) {
@@ -98,7 +98,7 @@ public class TodoListController {
     public ResponseEntity addTodo(@RequestHeader(value = "Authorization") String token, @Valid AddTDDForm addTDDForm, @PathVariable String type, BindingResult result) {
 
         todoListService.createTDDEntity(addTDDForm, type, token);
-        teamSseEmitters.updateTodoList(addTDDForm.getTeamName());
+        teamSseEmitters.updateTodoList(addTDDForm.getTeamName(), token);
         return ResponseEntity.ok().body("create todo card OK");
     }
 //
@@ -116,18 +116,18 @@ public class TodoListController {
     @RequestMapping(value = "/todolist/delete", method = {RequestMethod.POST})
     public ResponseEntity deleteTodoList(@RequestHeader(value = "Authorization") String token, @Valid DeleteTodoListForm deleteTodoListForm, BindingResult result) {
         todoListService.deleteTodoList(deleteTodoListForm.getTodoListId());
-        teamSseEmitters.updateTodoList(deleteTodoListForm.getTeamName());
+        teamSseEmitters.updateTodoList(deleteTodoListForm.getTeamName(), token);
         return ResponseEntity.ok().body("delete todoList ok");
     }
 
-    @RequestMapping(value = "/todolist/tdd/delete", method = {RequestMethod.POST})
+    @RequestMapping(value = "/todolist/tdd/delete", method = {RequestMethod.DELETE})
     public ResponseEntity deleteTdd(@RequestHeader(value = "Authorization") String token, @Valid DeleteTddForm deleteTddForm, BindingResult result) {
         log.info("deleteTddForm getTddId {}", deleteTddForm.getTddId());
         log.info("deleteTddForm getTeamName {}", deleteTddForm.getTeamName());
         log.info("deleteTddForm token {}", token);
         todoListService.deleteTdd(deleteTddForm);
 
-        List<TodoList> allByTeamName = todoListService.findAllByTeamName(new AllTodoListForm(deleteTddForm.getTeamName()), token);
+        List<TodoList> allByTeamName = todoListService.findAllByTeamName(deleteTddForm.getTeamName(), token);
 
         List<ResponseTodoList> responseTodoLists = new ArrayList<>();
         for(TodoList todoList : allByTeamName) {
@@ -139,7 +139,7 @@ public class TodoListController {
             responseTodoLists.add(responseTodolist);
         }
 
-        teamSseEmitters.updateTodoList(deleteTddForm.getTeamName());
+        teamSseEmitters.updateTodoList(deleteTddForm.getTeamName(), token);
         return ResponseEntity.ok().body(responseTodoLists);
     }
 
@@ -147,7 +147,7 @@ public class TodoListController {
     public ResponseEntity changeTddType(@RequestHeader(value = "Authorization") String token, @Valid ChangeTddTypeForm changeTddTypeForm, BindingResult result){
         todoListService.changeTddType(changeTddTypeForm.getTddId(), changeTddTypeForm.getTddType());
 
-        teamSseEmitters.updateTodoList(changeTddTypeForm.getTeamName());
+        teamSseEmitters.updateTodoList(changeTddTypeForm.getTeamName(), token);
         return ResponseEntity.ok().body("change todocard Ok");
     }
 
@@ -155,7 +155,7 @@ public class TodoListController {
     public ResponseEntity changeTodoDate(@RequestHeader(value = "Authorization") String token, @Valid ChangeTodoDateForm changeTodoDateForm, BindingResult result){
         todoListService.changeTodoDate(changeTodoDateForm.getId(), changeTodoDateForm.getStartDate(), changeTodoDateForm.getEndDate());
 
-        teamSseEmitters.updateTodoList(changeTodoDateForm.getTeamName());
+        teamSseEmitters.updateTodoList(changeTodoDateForm.getTeamName(), token);
         return ResponseEntity.ok().body("change todocard Ok");
     }
 }
