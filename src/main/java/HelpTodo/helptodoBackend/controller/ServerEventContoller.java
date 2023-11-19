@@ -21,14 +21,12 @@ public class ServerEventContoller {
     private final TeamSseEmitters teamSseEmitters;
     private final ServerEventService serverEventService;
     @GetMapping(value="/event/addEmitter", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> join(@RequestParam(value = "teamName") String teamName, AddEmitterForm addEmitterForm) {
+    public ResponseEntity<SseEmitter> join(@RequestParam(value = "teamName") String teamName) {
 
         SseEmitter emitter = serverEventService.addEmitter(teamName);
 
-        log.info("suc addEmitter");
         try{
-            log.info("send Test");
-            emitter.send(SseEmitter.event().name("test").data("testData"));
+            emitter.send(SseEmitter.event().name("connect").data("success"));
         }catch (IOException e ){
             throw new RuntimeException(e);
         }
@@ -37,8 +35,7 @@ public class ServerEventContoller {
 
     @RequestMapping("/update")
     public ResponseEntity update() {
-
-        return ResponseEntity.ok().body("update)");
+        return ResponseEntity.ok().body("update");
     }
 
 }
