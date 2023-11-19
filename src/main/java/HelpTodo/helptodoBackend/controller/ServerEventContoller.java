@@ -1,7 +1,6 @@
 package HelpTodo.helptodoBackend.controller;
 
 import HelpTodo.helptodoBackend.Components.TeamSseEmitters;
-import HelpTodo.helptodoBackend.Form.ServerEvent.AddEmitterForm;
 import HelpTodo.helptodoBackend.service.ServerEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

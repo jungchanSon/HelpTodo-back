@@ -1,9 +1,9 @@
 package HelpTodo.helptodoBackend.service;
 
-import HelpTodo.helptodoBackend.Form.ExitTeamForm;
-import HelpTodo.helptodoBackend.Form.team.CreateTeamForm;
-import HelpTodo.helptodoBackend.Form.team.FindMyMembersForm;
-import HelpTodo.helptodoBackend.Form.team.JoinTeamForm;
+import HelpTodo.helptodoBackend.form.ExitTeamForm;
+import HelpTodo.helptodoBackend.form.team.CreateTeamForm;
+import HelpTodo.helptodoBackend.form.team.FindMyMembersForm;
+import HelpTodo.helptodoBackend.form.team.JoinTeamForm;
 import HelpTodo.helptodoBackend.domain.MemberTeam;
 import HelpTodo.helptodoBackend.domain.Member;
 import HelpTodo.helptodoBackend.domain.Team;
