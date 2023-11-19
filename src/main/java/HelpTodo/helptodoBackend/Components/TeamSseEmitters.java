@@ -1,6 +1,8 @@
 package HelpTodo.helptodoBackend.Components;
 
+import HelpTodo.helptodoBackend.DTO.TodoListController.ResponseTodoList;
 import HelpTodo.helptodoBackend.controller.TodoListController;
+import HelpTodo.helptodoBackend.domain.TodoList;
 import HelpTodo.helptodoBackend.service.TodoListService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -17,6 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Slf4j
 public class TeamSseEmitters {
     private final ConcurrentHashMap<String, List<SseEmitter>> teamEmitterHashMap = new ConcurrentHashMap<>();
+    private final TodoListService todoListService;
 
     public void addEmitter(String teamName, SseEmitter memberSseEmitter){
         List memberEmitterList = teamEmitterHashMap.get(teamName);
@@ -24,7 +28,7 @@ public class TeamSseEmitters {
             List<SseEmitter> emitterList = new CopyOnWriteArrayList();
             emitterList.add(memberSseEmitter);
             teamEmitterHashMap.put(teamName, emitterList);
-        } else if (!memberEmitterList.contains(memberSseEmitter)){
+        } else {
             memberEmitterList.add(memberSseEmitter);
             teamEmitterHashMap.put(teamName, memberEmitterList);
         }
@@ -39,24 +43,27 @@ public class TeamSseEmitters {
         log.info("emmitters : {}", teamEmitterHashMap);
     }
 
-    public void updateTodoList(String teamName){
-        log.info("Update TodoList STRAT");
+    public void updateTodoList(String teamName, String token){
         List<SseEmitter> sseEmitters = teamEmitterHashMap.get(teamName);
+        List<TodoList> todolist = todoListService.findAllByTeamName(teamName, token);
+
+        List<ResponseTodoList> responseTodoLists = new ArrayList<>();
+        for(TodoList todoList : todolist) {
+            ResponseTodoList responseTodolist = ResponseTodoList.createResponseTodolist(todoList.getId(),
+                    todoList.getTitle(),
+                    todoList.getMember().getName(),
+                    todoList.getCreateDate(),
+                    todoList.getTdds());
+            responseTodoLists.add(responseTodolist);
+        }
+
         sseEmitters.forEach((emitter) -> {
             try{
                 log.info("send emitter : {}", emitter);
-                emitter.send(SseEmitter.event().name("updateTodoList").data("updateTodoList").reconnectTime(500));
+                emitter.send(SseEmitter.event().name("updateTodoList").data(responseTodoLists).reconnectTime(500));
             } catch (IOException e) {
                 sseEmitters.remove(emitter);
             }
         });
-        log.info("Update TodoList END");
-
     }
 }
-/*
-    Emitter = {team1 : [mem1, mem2],
-               team2 : [mem3, mem4],
-                ...
-               }
- */
