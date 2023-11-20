@@ -1,32 +1,10 @@
+# HelpTodo
+서비스 URL : www.helptodo.site
 
-# helpTodo-back 
-HelpTodo 웹 서비스의 백엔드 서버입니다.
+## HelpTodo 서비스
 
-# 2023.04.03.
-1. 프로젝트 1차 완성 
+캘린더를 통해 일정을 관리할 수 있는 투두리스트 웹 서비스입니다. 팀 단위로 일정을 공유하고, 팀원들과의 일정을 캘린더를 통해 한눈에 확인할 수 있으며, 변경사항들은 팀원들에게 실시간으로 반영됩니다.
 
-- 백엔드 API 목록 
-  - 회원 서비스 
-    - 회원가입 : /members/signup
-    - 로그인 : /members/login
-  - 팀 서비스
-    - 팀 생성 : /team/create
-    - 팀 가입 : /team/join
-    - 내 팀 조회 : /team/findMyTeam
-    - 다른 팀 조회 : /team/findOtherTeamList
-    - 모든 팀 조회 : /team/findTeamList
-  - 투두리스트 서비스
-    - 투두리스트 생성 : /todolist/create
-    - 투두리스트 조회 : /todolist/all
-    - 투두리스트 삭제 : /todolist/delete
-    - 투두카드 생성 : /todolist/addTDD/{type}
-    - 투두카드 삭제 : /todolist/tdd/delete
-    - 투두카드 타입 변경 : /todolist/change/tddType
-- 기타 
-  - 인증과 인가는 JWT로 구현
-  - 현재, H2 DB를 사용 중이지만, 서비스 배포 시에는 MySQL로 변경 후, AWS에 추가할 예정
-  
-2. Redis 추가
+## 시스템 구조
 
-- 같은 팀 내 팀원이 데이터를 수정할 경우, 1회성으로 업데이트 신호를 보내주기 위해 Redis를 이용해 Pub/Sub 구현할 예정.
-- AWS SNS와 AWS Lamda를 이용한 노팅도 생각해보기
+![image](https://github.com/jungchanSon/HelpTodo-back/assets/77601495/186e64e7-4afd-474b-9441-ee75d37c8866)
